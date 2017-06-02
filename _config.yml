@@ -1,0 +1,18 @@
+# Site settings
+name: Welcome
+title: Tek's Blog
+email: songt@iastate.edu
+# Build settings
+markdown: kramdown
+url: http://localhost:4000
+markdown: kramdown
+navigation:
+- text: Home
+  url: /index.html
+collections:
+  blog:
+    output: true
+    permalink: /blog/:path
+  topics:
+    output: true
+permalink: /blog/:path/
