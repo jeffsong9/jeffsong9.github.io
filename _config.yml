@@ -9,10 +9,3 @@ markdown: kramdown
 navigation:
 - text: Home
   url: /index.html
-collections:
-  blog:
-    output: true
-    permalink: /blog/:path
-  topics:
-    output: true
-permalink: /blog/:path/
