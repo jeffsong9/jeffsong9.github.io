@@ -1,0 +1,60 @@
+---
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Organazing Data Frame
+
+
+
+#Operators
+
+##Base R functions and operators
+
+
+
+###dataframe
+
+###subset
+columnwise subset
+Use `$` operator
+Use matrix notation *df*[,*column number*] or *df*[, *"column name"*]
+
+* e.g.
+```{r, comment=""}
+head(mtcars)
+```
+
+```{r, eval=F, comment=""}
+head(mtcars$mpg)
+head(mtcars[,1])
+head(mtcars[,"mpg"])
+```
+
+```{r, echo=F, comment=""}
+head(mtcars$mpg)
+```
+
+
+rowwise
+Use matrix notation *df*[*row number*,] or *df*[*"row name"*, ]
+```{r, eval=F, comment=""}
+mtcars[1,]
+mtcars["Mazda RX4",]
+```
+
+```{r, echo=F, comment=""}
+mtcars[1,]
+```
+
+
+
+
+##dplyr
+
+##tidyr

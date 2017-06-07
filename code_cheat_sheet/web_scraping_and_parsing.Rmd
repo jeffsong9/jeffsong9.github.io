@@ -1,0 +1,90 @@
+---
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(rvest)
+```
+
+# HTML Scraping and Parsing
+Web scraping and parsing was(and will be) an important part of my research interest. There are many useful packages in `R` that makes web scraping simple: `rvest`, `XML`, `RCurl`, `curl`, `RSelenium`, and etc.
+
+## Using the `rvest` package
+```
+install.packages("rvest") #if you haven't installed on yet
+require(rvest) #load the rvest package
+```
+
+###`read_html`
+read_html(*url*)
+
+Argument
+*url*: A url string
+
+```{r, tidy=TRUE, comment=""}
+read_html("https://jeffsong9.github.io/")
+```
+
+###`html_nodes`
+* Usage: Parse `HTML` documents using XPath or CSS selector.
+html\_nodes(*html\_doc*, *css*, *xpath*)
+
+* Argument
+*html\_doc*: A `HTML` document or a node set
+*css*: css selector
+*xpath*: xpath selector
+
+* e.g.:
+read_html(*some\_url*) %>%<br>
+  html_nodes(xpath="//b")
+Extracts all bold font text using the xpath selector //b.
+
+read_html(*some\_url*) %>%<br>
+  html_nodes(xpath='//div [@id="*something*"])
+
+read_html(*some\_url*) %>%<br>
+  html_nodes("center")
+Extract using css selector center
+
+* chain subsetting
+read_html(*some\_url*) %>%<br>
+  html_nodes("center") %>%<br>
+  html_nodes("font")
+  
+```{r, comment=""}
+read_html("https://jeffsong9.github.io/") %>%
+  html_nodes(xpath="//div") %>%
+  head(5)
+```
+  
+  
+cf) `html_node`
+
+###`html_attr`
+Usage: Extrac attributes with a given name
+html_attr(*html\_doc*, *name*)
+
+Arguments:
+*html node*: A`HTML` document or a node set
+*name*: Name of attribute to extract
+
+e.g.
+read_html(*some\_url*) %>%<br>
+  html_nodes(xpath="//a") %>%<br>
+  html_attr(name="href")
+
+```{r, comment=""}
+read_html("https://jeffsong9.github.io/") %>%
+  html_nodes(xpath="//img [@class='photo']")
+```
+
+```{r, comment=""}
+read_html("https://jeffsong9.github.io/") %>%
+  html_nodes(xpath="//img [@class='photo']") %>%
+  html_attr(name="src")
+```
+
+cf) html_attrs
