@@ -8,6 +8,12 @@ output:
     theme: cosmo
 ---
 
+<style>
+body {
+    position: absolute;
+    left: 0px;}
+</style>
+
 
 <!--html_preserve-->
 <div class="container">
