@@ -1,7 +1,11 @@
 ---
 output:
   html_document:
-    toc_float: true
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: cosmo
 ---
 
 <!--html_preserve-->
@@ -48,13 +52,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#Organazing Data Frame
+#Organazing Data Frame <!--{-}-->
 
-
-
-#Operators
-
-##Base R functions and operators
+##Base R functions and operators <!--{.tabset}-->
 
 
 
