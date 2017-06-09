@@ -55,39 +55,83 @@ body {
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
 ```
 
-#Organazing Data Frame <!--{-}-->
+#Organizing Data Frame <!--{-}-->
 
-##Base R functions and operators <!--{.tabset}-->
+##Subsetting <!--{.tabset}-->
 
+###1. 
 
+####1) Column subset
 
-###dataframe
+a. The `$` operator <br>
+*df$colmn name*
 
-###subset
-columnwise subset
-Use `$` operator
-Use matrix notation *df*[,*column number*] or *df*[, *"column name"*]
+b. By the column number <br>
+*df[,column number]*
 
-* e.g.
+c. By the column name <br>
+*df[, \"column name\"]*
+
+d. <a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf">`dplyr` package </a> <br>
+Utilize the function `select` from the `dplyr` package.<br>
+*select(df, column name)* <br>
+recommend using it in conjunction with the pipe operator `%>%` and other functions such as `filter`, `summarize` or `mutate`.
+
+#####e.g.
+
 ```{r, comment=""}
 head(mtcars)
 ```
 
 ```{r, eval=F, comment=""}
-head(mtcars$mpg)
-head(mtcars[,1])
-head(mtcars[,"mpg"])
+mtcars$mpg
+mtcars[,1]
+mtcars[,"mpg"]
+mtcars %>%
+  select(mpg)
 ```
 
 ```{r, echo=F, comment=""}
 head(mtcars$mpg)
 ```
+<br>
+
+#####Note
+
+* Subset multiple columns
+```{r, eval=F, comment=""}
+mtcars[,1:5]
+mtcars[,c(1,3,5)]
+mtcars[,c("mpg", "disp", "drat")]
+```
+
+* Complement
+```{r, eval=F, comment=""}
+mtcars[,-c(1,3,5)]
+
+```
+
+* S4 objects
+Check `@` for S4. <br>
+To be updated...
 
 
-rowwise
-Use matrix notation *df*[*row number*,] or *df*[*"row name"*, ]
+
+<br>
+
+####2) Row subset
+
+a. By the row number <br>
+*df[row number,]*
+
+b. By the row name <br>
+*df[\"row name\"", ]*
+
+#####e.g.
+
 ```{r, eval=F, comment=""}
 mtcars[1,]
 mtcars["Mazda RX4",]
@@ -97,8 +141,12 @@ mtcars["Mazda RX4",]
 mtcars[1,]
 ```
 
+###2. Filtering
 
 
+
+
+###3. List
 
 ##dplyr
 
