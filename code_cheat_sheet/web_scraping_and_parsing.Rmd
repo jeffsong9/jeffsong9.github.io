@@ -59,12 +59,12 @@ library(rvest)
 ```
 
 #HTML Scraping and Parsing
-Web scraping and parsing was(and will be) an important part of my research interest. There are many useful packages in `R` that makes web scraping simple: `rvest`, `XML`, `RCurl`, `curl`, `RSelenium`, and etc.
+Web scraping and parsing was(and will be) an important part of my research interest. There are many useful packages in `R` that makes web scraping simple: `rvest`, `XML`, `RCurl`, `curl`, `RSelenium`, and etc. 
 
 ## Using the <a href="https://cran.r-project.org/web/packages/rvest/rvest.pdf">`rvest` package</a>
-```
-install.packages("rvest") #if you haven't installed on yet
-require(rvest) #load the rvest package
+```{r, eval=F}
+install.packages("rvest") #if you haven't installed `rvest` yet
+require(rvest) #load the `rvest` package
 ```
 
 ###`read_html`
@@ -137,3 +137,7 @@ read_html("https://jeffsong9.github.io/") %>%
 ```
 
 cf) html_attrs
+
+
+
+
