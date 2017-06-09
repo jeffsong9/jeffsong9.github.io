@@ -58,9 +58,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 ```
 
-#Organizing Data Frame <!--{-}-->
+#Organizing Data Frame<!--{-}-->
 
-##Subsetting <!--{.tabset}-->
+##Subsetting<!--{.tabset}-->
 
 ###1. 
 
@@ -142,7 +142,6 @@ mtcars[1,]
 ```
 
 ###2. Filtering
-
 
 
 
