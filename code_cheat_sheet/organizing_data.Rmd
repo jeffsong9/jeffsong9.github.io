@@ -58,11 +58,11 @@ knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 ```
 
-#Organizing Data Frame<!--{-}-->
+#Organizing Data<!--{-}-->
 
-##Subsetting<!--{.tabset}-->
+##Data Frame<!--{.tabset}-->
 
-###1. 
+###1. Subsetting
 
 ####1) Column subset
 
