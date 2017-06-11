@@ -60,9 +60,94 @@ library(dplyr)
 
 #Organizing Data<!--{-}-->
 
-##Data Frame<!--{.tabset}-->
+##I. List
+List is the most general form of objects in `R`. <br>
+`[` is used to access the sub-list, `[[` to access the element.
 
-###1. Subsetting
+###1. Create List
+a. `list()` function
+```{r}
+alnum=list(c("a","b","c","d"), c(1,2))
+```
+
+```{r, echo=F, comment=""}
+alnum
+```
+
+The first sub-list of 'alnum' would be the character vector.
+This character vector may be retrieved by running the following code.
+```{r, comment=""}
+alnum[[1]]
+```
+Similarly, the following code will retrieve the second element of the second sub-list.
+
+```{r, comment=""}
+alnum[[2]][2]
+```
+
+One can also name the sub-list simply adding labels before the sub list.
+
+```{r}
+alnum2=list(alphabet=c("e","f","g","h"), integer=c(3,4))
+```
+
+```{r, echo=F, comment=""}
+alnum2
+```
+
+When the sub-lists are labeled, `[[` is no longer necessary.
+```{r, comment=""}
+alnum2$alphabet     #equivalent of alnum2[[1]]
+alnum2$integer[2]   #equivalent of alnum2[[2]][2]
+```
+
+cf) `unlist()`
+
+b. List as an output from a function
+Functions such as `lapply` or `strsplit` generates its output in a list format.
+```{r, comment=""}
+lapply(1:2, function(x) c(x-1,x+1))
+strsplit("abcdef", "c")
+```
+
+###2. Merge Multiple Lists
+a. Into a list via `append` function
+```{r, comment=""}
+append(alnum, alnum2)
+```
+
+```{r, comment=""}
+list(alnum, alnum2)
+```
+b. Into a Data Frame
+
+
+
+##II. Data Frame<!--{.tabset}-->
+
+###1. Create Data Frame
+
+data.frame
+as.data.frame
+rbind.data.frame
+cbind.data.frame
+
+?as.data.frame()
+
+Arguments:
+stringsAsFactors: logical. `F` if the character vector should not be converted to a factor.
+e.g.
+```{r}
+library(dplyr)
+check=matrix(letters[1:9], nrow=3, byrow=T)
+check %>% as.data.frame() %>% str()
+check %>% as.data.frame(stringsAsFactors=F) %>% str()
+check %>% as.data.frame() %>% .$V1
+```
+
+
+
+###2. Subsetting
 
 ####1) Column subset
 
@@ -141,14 +226,15 @@ mtcars["Mazda RX4",]
 mtcars[1,]
 ```
 
-###2. Filtering
+###3. Filtering
 
-
-
-###3. List
 
 
 ###4. Data Presentation
 Data set structured in a human friendly format dose not necessarily imply computer/machine friendly fashion or vise versa. Often times, therefore, data structure should be changed from long form to wide form or in the reversed manner. This may be even more important if one is sending and receiving data with co-workers who are not familiar with programming.  <a href="https://cran.r-project.org/web/packages/tidyr/tidyr.pdf">`tidyr`</a> and <a href="https://cran.rstudio.com/web/packages/reshape2/reshape2.pdf">`reshape`</a> are two useful packages that 
+
+
+###5. Nested Data Frame
+
 
 ##tidyr
