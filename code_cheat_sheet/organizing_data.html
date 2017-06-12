@@ -267,15 +267,17 @@ body {
 
 <div id="organizing-data" class="section level1">
 <h1>Organizing Data<!--{-}--></h1>
+<p>Cleaning, reshaping, and organizing data is a second nature of</p>
 <div id="i.-list" class="section level2">
 <h2>I. List</h2>
-<p>List is the most general form of objects in <code>R</code>. <br> <code>[</code> is used to access the sub-list, <code>[[</code> to access the element.</p>
+<p>List is the most general (and flexible) form of objects in <code>R</code>. <br> <code>[]</code> is used to access the sub-list, <code>[[]]</code> to access the element.</p>
 <div id="create-list" class="section level3">
 <h3>1. Create List</h3>
 <ol style="list-style-type: lower-alpha">
 <li><code>list()</code> function</li>
 </ol>
-<pre class="r"><code>alnum=list(c(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;), c(1,2))</code></pre>
+<pre class="r"><code>alnum=list(c(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;), c(1,2)
+  )</code></pre>
 <pre><code>[[1]]
 [1] &quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;
 
@@ -288,13 +290,15 @@ body {
 <pre class="r"><code>alnum[[2]][2]</code></pre>
 <pre><code>[1] 2</code></pre>
 <p>One can also name the sub-list simply adding labels before the sub list.</p>
-<pre class="r"><code>alnum2=list(alphabet=c(&quot;e&quot;,&quot;f&quot;,&quot;g&quot;,&quot;h&quot;), integer=c(3,4))</code></pre>
+<pre class="r"><code>alnum2=list(
+  alphabet=c(&quot;e&quot;,&quot;f&quot;,&quot;g&quot;,&quot;h&quot;), 
+  integer=c(3,4))</code></pre>
 <pre><code>$alphabet
 [1] &quot;e&quot; &quot;f&quot; &quot;g&quot; &quot;h&quot;
 
 $integer
 [1] 3 4</code></pre>
-<p>When the sub-lists are labeled, <code>[[</code> is no longer necessary.</p>
+<p>When the sub-lists are labeled, <code>[[]]</code> is no longer necessary.</p>
 <pre class="r"><code>alnum2$alphabet     #equivalent of alnum2[[1]]</code></pre>
 <pre><code>[1] &quot;e&quot; &quot;f&quot; &quot;g&quot; &quot;h&quot;</code></pre>
 <pre class="r"><code>alnum2$integer[2]   #equivalent of alnum2[[2]][2]</code></pre>
@@ -318,6 +322,7 @@ $integer
 <ol style="list-style-type: lower-alpha">
 <li>Into a list via <code>append</code> function</li>
 </ol>
+<p>When someone is trying to combine two or more lists together, this is probably what they want.</p>
 <pre class="r"><code>append(alnum, alnum2)</code></pre>
 <pre><code>[[1]]
 [1] &quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;
@@ -330,6 +335,7 @@ $alphabet
 
 $integer
 [1] 3 4</code></pre>
+<p>Do not get confused with the following code.</p>
 <pre class="r"><code>list(alnum, alnum2)</code></pre>
 <pre><code>[[1]]
 [[1]][[1]]
@@ -346,32 +352,48 @@ $integer
 [[2]]$integer
 [1] 3 4</code></pre>
 <ol start="2" style="list-style-type: lower-alpha">
-<li>Into a Data Frame</li>
+<li>Into a Data Frame Often times (especially when using a function that gives output in a list format) one may wish to coerce a list to a 2D matrix or data frame. The function <code>do.call</code> may be handy, in conjunction with <code>rbind</code>, <code>cbind</code>, <code>rbind.data.frame</code>.</li>
 </ol>
+<pre class="r"><code>lapply(1:2, function(x) c(x-1,x+1)) %&gt;%
+  do.call(&quot;rbind&quot;, .)</code></pre>
+<pre><code>     [,1] [,2]
+[1,]    0    2
+[2,]    1    3</code></pre>
+<p>cf) Check dplyr::bind_rows or plyr::rbind.fill for list with unequal length.</p>
 </div>
 </div>
 <div id="ii.-data-frame" class="section level2">
 <h2>II. Data Frame<!--{.tabset}--></h2>
+<p>Data frame is a list of vectors of equal length with all contents being heterogeneous.<br> cf) matrix for homogeneous</p>
 <div id="create-data-frame" class="section level3">
 <h3>1. Create Data Frame</h3>
-<p>data.frame as.data.frame rbind.data.frame cbind.data.frame</p>
-<p>?as.data.frame()</p>
-<p>Arguments: stringsAsFactors: logical. <code>F</code> if the character vector should not be converted to a factor. e.g.</p>
-<pre class="r"><code>library(dplyr)
-check=matrix(letters[1:9], nrow=3, byrow=T)
+<ol style="list-style-type: lower-alpha">
+<li>Using <code>base</code> <code>R</code> functions Use <code>data.frame</code>, <code>as.data.frame</code>, <code>rbind.data.frame</code>, <code>cbind.data.frame</code> to create or change existing data to data frame format. Note that the <code>data.frame</code> function builds data frame but <code>as.data.frame</code> is a function that coerce other objects into <code>dataframe</code> class.</li>
+</ol>
+<p>e.g. Check the output difference between the two codes.</p>
+<pre class="r"><code>data.frame(matrix(1:9, nrow=3), letters[1:3])</code></pre>
+<pre><code>  X1 X2 X3 letters.1.3.
+1  1  4  7            a
+2  2  5  8            b
+3  3  6  9            c</code></pre>
+<pre class="r"><code>as.data.frame(matrix(1:9, nrow=3), letters[1:3])</code></pre>
+<pre><code>  V1 V2 V3
+a  1  4  7
+b  2  5  8
+c  3  6  9</code></pre>
+<p>Useful argument. <code>stringsAsFactors</code> (logical): <code>F</code> if the character vector should not be converted to a factor. e.g.</p>
+<pre class="r"><code>check=matrix(letters[1:9], nrow=3, byrow=T)
 check %&gt;% as.data.frame() %&gt;% str()</code></pre>
-<pre><code>## 'data.frame':    3 obs. of  3 variables:
-##  $ V1: Factor w/ 3 levels &quot;a&quot;,&quot;d&quot;,&quot;g&quot;: 1 2 3
-##  $ V2: Factor w/ 3 levels &quot;b&quot;,&quot;e&quot;,&quot;h&quot;: 1 2 3
-##  $ V3: Factor w/ 3 levels &quot;c&quot;,&quot;f&quot;,&quot;i&quot;: 1 2 3</code></pre>
+<pre><code>'data.frame':   3 obs. of  3 variables:
+ $ V1: Factor w/ 3 levels &quot;a&quot;,&quot;d&quot;,&quot;g&quot;: 1 2 3
+ $ V2: Factor w/ 3 levels &quot;b&quot;,&quot;e&quot;,&quot;h&quot;: 1 2 3
+ $ V3: Factor w/ 3 levels &quot;c&quot;,&quot;f&quot;,&quot;i&quot;: 1 2 3</code></pre>
 <pre class="r"><code>check %&gt;% as.data.frame(stringsAsFactors=F) %&gt;% str()</code></pre>
-<pre><code>## 'data.frame':    3 obs. of  3 variables:
-##  $ V1: chr  &quot;a&quot; &quot;d&quot; &quot;g&quot;
-##  $ V2: chr  &quot;b&quot; &quot;e&quot; &quot;h&quot;
-##  $ V3: chr  &quot;c&quot; &quot;f&quot; &quot;i&quot;</code></pre>
-<pre class="r"><code>check %&gt;% as.data.frame() %&gt;% .$V1</code></pre>
-<pre><code>## [1] a d g
-## Levels: a d g</code></pre>
+<pre><code>'data.frame':   3 obs. of  3 variables:
+ $ V1: chr  &quot;a&quot; &quot;d&quot; &quot;g&quot;
+ $ V2: chr  &quot;b&quot; &quot;e&quot; &quot;h&quot;
+ $ V3: chr  &quot;c&quot; &quot;f&quot; &quot;i&quot;</code></pre>
+<p>Note that the factors and levels are dropped.</p>
 </div>
 <div id="subsetting" class="section level3">
 <h3>2. Subsetting</h3>
@@ -381,8 +403,9 @@ check %&gt;% as.data.frame() %&gt;% str()</code></pre>
 <li><p>The <code>$</code> operator <br> <em>df$colmn name</em></p></li>
 <li><p>By the column number <br> <em>df[,column number]</em></p></li>
 <li><p>By the column name <br> <em>df[, &quot;column name&quot;]</em></p></li>
-<li><p><a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf"><code>dplyr</code> package </a> <br> Utilize the function <code>select</code> from the <code>dplyr</code> package.<br> <em>select(df, column name)</em> <br> recommend using it in conjunction with the pipe operator <code>%&gt;%</code> and other functions such as <code>filter</code>, <code>summarize</code> or <code>mutate</code>.</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf"><code>dplyr</code> package</a></p></li>
 </ol>
+<p>Utilize the function <code>select</code> from the <code>dplyr</code> package.<br> <em>select(df, column name)</em> <br> recommend using it in conjunction with the pipe operator <code>%&gt;%</code> and other functions such as <code>filter</code>, <code>summarize</code> or <code>mutate</code>.</p>
 <div id="e.g." class="section level5">
 <h5>e.g.</h5>
 <pre class="r"><code>head(mtcars)</code></pre>
@@ -436,6 +459,103 @@ Mazda RX4  21   6  160 110  3.9 2.62 16.46  0  1    4    4</code></pre>
 </div>
 <div id="filtering" class="section level3">
 <h3>3. Filtering</h3>
+<div id="using-base-r-functions" class="section level4">
+<h4>1) Using base R functions</h4>
+<ol style="list-style-type: lower-alpha">
+<li><code>==</code> and <code>!=</code></li>
+</ol>
+<p>df[df$“column name”==“value of interest”] df[df$“column name”!=“value of interest”]</p>
+<p>e.g. There are 3 different types of cylinders in the <code>mtcars</code> data set.</p>
+<pre><code>
+ 4  6  8 
+11  7 14 </code></pre>
+<p>Use the logical operators <code>==</code> or <code>!=</code> to filter data with certain cylinder number.</p>
+<pre class="r"><code>mtcars[mtcars$cyl==6,]</code></pre>
+<pre><code>                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4      21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+Ferrari Dino   19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6</code></pre>
+<pre class="r"><code>mtcars[mtcars$cyl!=8,]</code></pre>
+<pre><code>                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4      21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+Merc 230       22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+Toyota Corona  21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+Porsche 914-2  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+Ferrari Dino   19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
+<p>Logical operators such as <code>|</code> and <code>&amp;</code> may also be applied.</p>
+<pre class="r"><code>mtcars[(mtcars$cyl==6)|(mtcars$cyl==8),]</code></pre>
+<pre><code>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</code></pre>
+<pre class="r"><code>mtcars[(mtcars$cyl==6) &amp; (mtcars$hp==110),]</code></pre>
+<pre><code>                mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4      21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><code>%in%</code> and its corresponding negation</li>
+</ol>
+<p><code>%in%</code> is an operator that matches first argument with its second and returns a logical vector. It is somewhat similar to the <code>==</code> operator, but more useful if there are multiple values that needs to be subsetted. For example, the code in the above example: &quot;mtcars[(mtcars$cyl==6)|(mtcars$cyl==8),]&quot; can be simplified as &quot;mtcars[mtcars$cyl %in% c(6, 8),]&quot;.</p>
+<pre class="r"><code>identical(mtcars[mtcars$cyl %in% c(6, 8),], mtcars[(mtcars$cyl==6)|(mtcars$cyl==8),])</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<p>Similarly, <code>%in%</code> may be negated as the following code.</p>
+<pre class="r"><code>mtcars[!mtcars$cyl %in% c(6, 8),]</code></pre>
+<pre><code>                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+Merc 230       22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+Toyota Corona  21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+Porsche 914-2  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
+<p>Note that <code>mtcars[mtcars$cyl !%in% c(6, 8),]</code> would be a wrong code. I personally like to introduce a new function <code>%!in%</code>that negates the <code>%in%</code> function.</p>
+<pre class="r"><code>'%!in%' &lt;-function(x, y)!('%in%'(x,y))</code></pre>
+<pre class="r"><code>identical(mtcars[!mtcars$cyl %in% c(6, 8),],mtcars[mtcars$cyl %!in% c(6, 8),])</code></pre>
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div id="dplyr-package" class="section level4">
+<h4>2) <a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf"><code>dplyr</code> package</a></h4>
+</div>
 </div>
 <div id="data-presentation" class="section level3">
 <h3>4. Data Presentation</h3>

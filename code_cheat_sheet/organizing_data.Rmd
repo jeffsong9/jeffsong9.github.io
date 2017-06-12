@@ -59,15 +59,18 @@ library(dplyr)
 ```
 
 #Organizing Data<!--{-}-->
+Cleaning, reshaping, and organizing data is a second nature of 
+
 
 ##I. List
-List is the most general form of objects in `R`. <br>
-`[` is used to access the sub-list, `[[` to access the element.
+List is the most general (and flexible) form of objects in `R`. <br>
+`[]` is used to access the sub-list, `[[]]` to access the element.
 
 ###1. Create List
 a. `list()` function
 ```{r}
-alnum=list(c("a","b","c","d"), c(1,2))
+alnum=list(c("a","b","c","d"), c(1,2)
+  )
 ```
 
 ```{r, echo=F, comment=""}
@@ -88,14 +91,16 @@ alnum[[2]][2]
 One can also name the sub-list simply adding labels before the sub list.
 
 ```{r}
-alnum2=list(alphabet=c("e","f","g","h"), integer=c(3,4))
+alnum2=list(
+  alphabet=c("e","f","g","h"), 
+  integer=c(3,4))
 ```
 
 ```{r, echo=F, comment=""}
 alnum2
 ```
 
-When the sub-lists are labeled, `[[` is no longer necessary.
+When the sub-lists are labeled, `[[]]` is no longer necessary.
 ```{r, comment=""}
 alnum2$alphabet     #equivalent of alnum2[[1]]
 alnum2$integer[2]   #equivalent of alnum2[[2]][2]
@@ -112,40 +117,56 @@ strsplit("abcdef", "c")
 
 ###2. Merge Multiple Lists
 a. Into a list via `append` function
+
+When someone is trying to combine two or more lists together, this is probably what they want.
 ```{r, comment=""}
 append(alnum, alnum2)
 ```
 
+Do not get confused with the following code.
 ```{r, comment=""}
 list(alnum, alnum2)
 ```
+
+
 b. Into a Data Frame
+Often times (especially when using a function that gives output in a list format) one may wish to coerce a list to a 2D matrix or data frame. The function `do.call` may be handy, in conjunction with `rbind`, `cbind`, `rbind.data.frame`.
+
+```{r, comment=""}
+lapply(1:2, function(x) c(x-1,x+1)) %>%
+  do.call("rbind", .)
+```
+
+cf) Check dplyr::bind_rows or plyr::rbind.fill for list with unequal length.
 
 
 
 ##II. Data Frame<!--{.tabset}-->
+Data frame is a list of vectors of equal length with all contents being heterogeneous.<br>
+cf) matrix for homogeneous 
 
 ###1. Create Data Frame
 
-data.frame
-as.data.frame
-rbind.data.frame
-cbind.data.frame
+a. Using `base` `R` functions
+Use `data.frame`, `as.data.frame`, `rbind.data.frame`, `cbind.data.frame` to create or change existing data to data frame format. Note that the `data.frame` function builds data frame but `as.data.frame` is a function that coerce other objects into `dataframe` class.
 
-?as.data.frame()
-
-Arguments:
-stringsAsFactors: logical. `F` if the character vector should not be converted to a factor.
 e.g.
-```{r}
-library(dplyr)
+Check the output difference between the two codes.
+```{r, comment=""}
+data.frame(matrix(1:9, nrow=3), letters[1:3])
+as.data.frame(matrix(1:9, nrow=3), letters[1:3])
+```
+
+Useful argument.
+`stringsAsFactors` (logical): `F` if the character vector should not be converted to a factor.
+e.g.
+```{r, comment=""}
 check=matrix(letters[1:9], nrow=3, byrow=T)
 check %>% as.data.frame() %>% str()
 check %>% as.data.frame(stringsAsFactors=F) %>% str()
-check %>% as.data.frame() %>% .$V1
 ```
 
-
+Note that the factors and levels are dropped.
 
 ###2. Subsetting
 
@@ -160,7 +181,8 @@ b. By the column number <br>
 c. By the column name <br>
 *df[, \"column name\"]*
 
-d. <a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf">`dplyr` package </a> <br>
+d. <a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf">`dplyr` package</a>
+
 Utilize the function `select` from the `dplyr` package.<br>
 *select(df, column name)* <br>
 recommend using it in conjunction with the pipe operator `%>%` and other functions such as `filter`, `summarize` or `mutate`.
@@ -227,6 +249,55 @@ mtcars[1,]
 ```
 
 ###3. Filtering
+
+####1) Using base R functions
+a. `==` and `!=`
+
+df[df$"column name"=="value of interest"]
+df[df$"column name"!="value of interest"]
+
+e.g.
+There are 3 different types of cylinders in the `mtcars` data set.
+```{r, echo=F, comment=""}
+table(mtcars$cyl)
+```
+
+Use the logical operators `==` or `!=` to filter data with certain cylinder number.
+```{r, comment=""}
+mtcars[mtcars$cyl==6,]
+mtcars[mtcars$cyl!=8,]
+```
+
+Logical operators such as `|` and `&` may also be applied.
+```{r, comment=""}
+mtcars[(mtcars$cyl==6)|(mtcars$cyl==8),]
+mtcars[(mtcars$cyl==6) & (mtcars$hp==110),]
+```
+
+
+b. `%in%` and its corresponding negation
+
+`%in%` is an operator that matches first argument with its second and returns a logical vector. It is somewhat similar to the `==` operator, but more useful if there are multiple values that needs to be subsetted. For example, the code in the above example: \"mtcars[(mtcars\$cyl==6)\|(mtcars\$cyl==8),]\" can be simplified as \"mtcars[mtcars\$cyl %in% c(6, 8),]\".
+```{r, comment=""}
+identical(mtcars[mtcars$cyl %in% c(6, 8),], mtcars[(mtcars$cyl==6)|(mtcars$cyl==8),])
+```
+
+Similarly, `%in%` may be negated as the following code.
+```{r, comment=""}
+mtcars[!mtcars$cyl %in% c(6, 8),]
+```
+
+Note that `mtcars[mtcars$cyl !%in% c(6, 8),]` would be a wrong code. I personally like to introduce a new function `%!in%`that negates the `%in%` function.
+```{r}
+'%!in%' <-function(x, y)!('%in%'(x,y))
+```
+
+```{r, comment=""}
+identical(mtcars[!mtcars$cyl %in% c(6, 8),],mtcars[mtcars$cyl %!in% c(6, 8),])
+```
+
+####2) <a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf">`dplyr` package</a>
+
 
 
 
