@@ -2,7 +2,7 @@
 output:
   html_document:
     toc: true
-    toc_depth: 3
+    toc_depth: 2
     toc_float: true
     theme: cosmo
 ---
@@ -61,7 +61,7 @@ sapply(pkg, require, character=T)
 
 
 <h1>Organizing Data</h1><ol type="I"><!--{-}-->
-Cleaning, reshaping, and organizing data is a second nature of 
+Formatting, reshaping, and organizing data should be a second nature of data scientists.
 
 
 
