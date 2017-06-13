@@ -2,7 +2,7 @@
 output:
   html_document:
     toc: true
-    toc_depth: 2
+    toc_depth: 3
     toc_float: true
     theme: cosmo
 ---
@@ -61,7 +61,7 @@ sapply(pkg, require, character=T)
 
 
 <h1>Organizing Data</h1><ol type="I"><!--{-}-->
-Formatting, reshaping, and organizing data should be a second nature of data scientists.
+Formatting, reshaping, and organizing data should be a second nature of every data scientists.
 
 
 
@@ -138,7 +138,7 @@ list(alnum, alnum2)
 
 
 <li>Into a Data Frame</li>
-Often times (especially when using a function that gives output in a list format) one may wish to coerce a list to a 2D matrix or data frame. The function `do.call` may be handy, in conjunction with `rbind`, `cbind`, `rbind.data.frame`.
+Often times (especially when using a function that gives output in a list format) one may wish to coerce a list to a 2D matrix or into a data frame. The function `do.call` may be handy in this case in conjunction with functions such as `rbind`, `cbind`, `rbind.data.frame`, `cbind.data.frame`.
 
 ```{r, comment=""}
 lapply(1:2, function(x) c(x-1,x+1)) %>%

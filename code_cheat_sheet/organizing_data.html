@@ -122,7 +122,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2",
+      selectors: "h1,h2,h3",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
@@ -264,7 +264,7 @@ Organizing Data
 </h1>
 <ol type="I">
 <!--{-}-->
-<p>Formatting, reshaping, and organizing data should be a second nature of data scientists.</p>
+<p>Formatting, reshaping, and organizing data should be a second nature of every data scientists.</p>
 <h2>
 <li>
 List
@@ -364,7 +364,7 @@ $integer
 <li>
 Into a Data Frame
 </li>
-<p>Often times (especially when using a function that gives output in a list format) one may wish to coerce a list to a 2D matrix or data frame. The function <code>do.call</code> may be handy, in conjunction with <code>rbind</code>, <code>cbind</code>, <code>rbind.data.frame</code>.</p>
+<p>Often times (especially when using a function that gives output in a list format) one may wish to coerce a list to a 2D matrix or into a data frame. The function <code>do.call</code> may be handy in this case in conjunction with functions such as <code>rbind</code>, <code>cbind</code>, <code>rbind.data.frame</code>, <code>cbind.data.frame</code>.</p>
 <pre class="r"><code>lapply(1:2, function(x) c(x-1,x+1)) %&gt;%
   do.call(&quot;rbind&quot;, .)</code></pre>
 <pre><code>     [,1] [,2]
