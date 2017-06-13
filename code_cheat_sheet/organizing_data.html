@@ -131,8 +131,8 @@ $(document).ready(function ()  {
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
     };
-    options.showAndHide = false;
-    options.smoothScroll = false;
+    options.showAndHide = true;
+    options.smoothScroll = true;
 
     // tocify
     var toc = $("#TOC").tocify(options).data("toc-tocify");
@@ -194,12 +194,6 @@ div.tocify {
   border-radius: 0px;
 }
 
-.tocify-subheader {
-  display: inline;
-}
-.tocify-subheader .tocify-item {
-  font-size: 0.95em;
-}
 
 </style>
 
@@ -265,19 +259,29 @@ body {
 </nav><!--navbar navbar-default-->
 </div>
 
-<div id="organizing-data" class="section level1">
-<h1>Organizing Data<!--{-}--></h1>
+<h1>
+Organizing Data
+</h1>
+<ol type="I">
+<!--{-}-->
 <p>Cleaning, reshaping, and organizing data is a second nature of</p>
-<div id="i.-list" class="section level2">
-<h2>I. List</h2>
+<h2>
+<li>
+List
+</li>
+</h2>
+<ol type="1">
 <p>List is the most general (and flexible) form of objects in <code>R</code>. <br> <code>[]</code> is used to access the sub-list, <code>[[]]</code> to access the element.</p>
-<div id="create-list" class="section level3">
-<h3>1. Create List</h3>
-<ol style="list-style-type: lower-alpha">
-<li><code>list()</code> function</li>
-</ol>
-<pre class="r"><code>alnum=list(c(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;), c(1,2)
-  )</code></pre>
+<h3>
+<li>
+Create List
+</li>
+</h3>
+<ol type="a">
+<li>
+<code>list()</code> function
+</li>
+<pre class="r"><code>alnum=list(c(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;), c(1,2))</code></pre>
 <pre><code>[[1]]
 [1] &quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;
 
@@ -304,9 +308,10 @@ $integer
 <pre class="r"><code>alnum2$integer[2]   #equivalent of alnum2[[2]][2]</code></pre>
 <pre><code>[1] 4</code></pre>
 <p>cf) <code>unlist()</code></p>
-<ol start="2" style="list-style-type: lower-alpha">
-<li>List as an output from a function Functions such as <code>lapply</code> or <code>strsplit</code> generates its output in a list format.</li>
-</ol>
+<li>
+List as an output from a function
+</li>
+<p>Functions such as <code>lapply</code> or <code>strsplit</code> generates its output in a list format.</p>
 <pre class="r"><code>lapply(1:2, function(x) c(x-1,x+1))</code></pre>
 <pre><code>[[1]]
 [1] 0 2
@@ -316,12 +321,17 @@ $integer
 <pre class="r"><code>strsplit(&quot;abcdef&quot;, &quot;c&quot;)</code></pre>
 <pre><code>[[1]]
 [1] &quot;ab&quot;  &quot;def&quot;</code></pre>
-</div>
-<div id="merge-multiple-lists" class="section level3">
-<h3>2. Merge Multiple Lists</h3>
-<ol style="list-style-type: lower-alpha">
-<li>Into a list via <code>append</code> function</li>
 </ol>
+<!--Create List-->
+<h3>
+<li>
+Merge Multiple Lists
+</li>
+</h3>
+<ol type="a">
+<li>
+Into a list via <code>append</code> function
+</li>
 <p>When someone is trying to combine two or more lists together, this is probably what they want.</p>
 <pre class="r"><code>append(alnum, alnum2)</code></pre>
 <pre><code>[[1]]
@@ -351,25 +361,38 @@ $integer
 
 [[2]]$integer
 [1] 3 4</code></pre>
-<ol start="2" style="list-style-type: lower-alpha">
-<li>Into a Data Frame Often times (especially when using a function that gives output in a list format) one may wish to coerce a list to a 2D matrix or data frame. The function <code>do.call</code> may be handy, in conjunction with <code>rbind</code>, <code>cbind</code>, <code>rbind.data.frame</code>.</li>
-</ol>
+<li>
+Into a Data Frame
+</li>
+<p>Often times (especially when using a function that gives output in a list format) one may wish to coerce a list to a 2D matrix or data frame. The function <code>do.call</code> may be handy, in conjunction with <code>rbind</code>, <code>cbind</code>, <code>rbind.data.frame</code>.</p>
 <pre class="r"><code>lapply(1:2, function(x) c(x-1,x+1)) %&gt;%
   do.call(&quot;rbind&quot;, .)</code></pre>
 <pre><code>     [,1] [,2]
 [1,]    0    2
 [2,]    1    3</code></pre>
 <p>cf) Check dplyr::bind_rows or plyr::rbind.fill for list with unequal length.</p>
-</div>
-</div>
-<div id="ii.-data-frame" class="section level2">
-<h2>II. Data Frame<!--{.tabset}--></h2>
-<p>Data frame is a list of vectors of equal length with all contents being heterogeneous.<br> cf) matrix for homogeneous</p>
-<div id="create-data-frame" class="section level3">
-<h3>1. Create Data Frame</h3>
-<ol style="list-style-type: lower-alpha">
-<li>Using <code>base</code> <code>R</code> functions Use <code>data.frame</code>, <code>as.data.frame</code>, <code>rbind.data.frame</code>, <code>cbind.data.frame</code> to create or change existing data to data frame format. Note that the <code>data.frame</code> function builds data frame but <code>as.data.frame</code> is a function that coerce other objects into <code>dataframe</code> class.</li>
 </ol>
+<!--Merge Multiple Lists-->
+</ol>
+<!--List-->
+<h2>
+<li>
+Data Frame
+</li>
+</h2>
+<!--{.tabset}-->
+<ol type="1">
+<p>Data frame is a list of vectors of equal length with all contents being heterogeneous.<br> cf) matrix for homogeneous</p>
+<h3>
+<li>
+Create Data Frame
+</li>
+</h3>
+<ol type="a">
+<li>
+Using <code>base</code> <code>R</code> functions
+</li>
+<p>Use <code>data.frame</code>, <code>as.data.frame</code>, <code>rbind.data.frame</code>, <code>cbind.data.frame</code> to create or change existing data to data frame format. Note that the <code>data.frame</code> function builds data frame but <code>as.data.frame</code> is a function that coerce other objects into <code>dataframe</code> class.</p>
 <p>e.g. Check the output difference between the two codes.</p>
 <pre class="r"><code>data.frame(matrix(1:9, nrow=3), letters[1:3])</code></pre>
 <pre><code>  X1 X2 X3 letters.1.3.
@@ -394,20 +417,39 @@ check %&gt;% as.data.frame() %&gt;% str()</code></pre>
  $ V2: chr  &quot;b&quot; &quot;e&quot; &quot;h&quot;
  $ V3: chr  &quot;c&quot; &quot;f&quot; &quot;i&quot;</code></pre>
 <p>Note that the factors and levels are dropped.</p>
-</div>
-<div id="subsetting" class="section level3">
-<h3>2. Subsetting</h3>
-<div id="column-subset" class="section level4">
-<h4>1) Column subset</h4>
-<ol style="list-style-type: lower-alpha">
-<li><p>The <code>$</code> operator <br> <em>df$colmn name</em></p></li>
-<li><p>By the column number <br> <em>df[,column number]</em></p></li>
-<li><p>By the column name <br> <em>df[, &quot;column name&quot;]</em></p></li>
-<li><p><a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf"><code>dplyr</code> package</a></p></li>
 </ol>
+<!--Create Data Frame-->
+<h3>
+<li>
+Subsetting
+</li>
+</h3>
+<ol type="a">
+<h4>
+<li>
+Column subset
+</li>
+</h4>
+<ol type="i">
+<li>
+The <code>$</code> operator
+</li>
+<p><em>df$colmn name</em></p>
+<li>
+By the column number
+</li>
+<p><em>df[,column number]</em></p>
+<li>
+By the column name
+</li>
+<p><em>df[, &quot;column name&quot;]</em></p>
+<li>
+<a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf"><code>dplyr</code> package</a>
+</li>
 <p>Utilize the function <code>select</code> from the <code>dplyr</code> package.<br> <em>select(df, column name)</em> <br> recommend using it in conjunction with the pipe operator <code>%&gt;%</code> and other functions such as <code>filter</code>, <code>summarize</code> or <code>mutate</code>.</p>
-<div id="e.g." class="section level5">
-<h5>e.g.</h5>
+</ol>
+<!--Column subset-->
+<p>e.g.</p>
 <pre class="r"><code>head(mtcars)</code></pre>
 <pre><code>                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
 Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
@@ -423,9 +465,7 @@ mtcars %&gt;%
   select(mpg)</code></pre>
 <pre><code>[1] 21.0 21.0 22.8 21.4 18.7 18.1</code></pre>
 <p><br></p>
-</div>
-<div id="note" class="section level5">
-<h5>Note</h5>
+<p>Note</p>
 <ul>
 <li>Subset multiple columns</li>
 </ul>
@@ -440,30 +480,44 @@ mtcars[,c(&quot;mpg&quot;, &quot;disp&quot;, &quot;drat&quot;)]</code></pre>
 <li>S4 objects Check <code>@</code> for S4. <br> To be updated…</li>
 </ul>
 <p><br></p>
-</div>
-</div>
-<div id="row-subset" class="section level4">
-<h4>2) Row subset</h4>
-<ol style="list-style-type: lower-alpha">
-<li><p>By the row number <br> <em>df[row number,]</em></p></li>
-<li><p>By the row name <br> <em>df[&quot;row name&quot;“, ]</em></p></li>
-</ol>
-<div id="e.g.-1" class="section level5">
-<h5>e.g.</h5>
+<h4>
+<li>
+Row subset
+</li>
+</h4>
+<ol type="i">
+<li>
+By the row number
+</li>
+<p><em>df[row number,]</em></p>
+<li>
+By the row name
+</li>
+<p><em>df[&quot;row name&quot;“, ]</em></p>
+<p>e.g.</p>
 <pre class="r"><code>mtcars[1,]
 mtcars[&quot;Mazda RX4&quot;,]</code></pre>
 <pre><code>          mpg cyl disp  hp drat   wt  qsec vs am gear carb
 Mazda RX4  21   6  160 110  3.9 2.62 16.46  0  1    4    4</code></pre>
-</div>
-</div>
-</div>
-<div id="filtering" class="section level3">
-<h3>3. Filtering</h3>
-<div id="using-base-r-functions" class="section level4">
-<h4>1) Using base R functions</h4>
-<ol style="list-style-type: lower-alpha">
-<li><code>==</code> and <code>!=</code></li>
 </ol>
+<!--Row subset-->
+</ol>
+<!--subsetting-->
+<h3>
+<li>
+Filtering
+</li>
+</h3>
+<ol type="a">
+<h4>
+<li>
+Using base R functions
+</li>
+</h4>
+<ol type="i">
+<li>
+<code>==</code> and <code>!=</code>
+</li>
 <p>df[df$“column name”==“value of interest”] df[df$“column name”!=“value of interest”]</p>
 <p>e.g. There are 3 different types of cylinders in the <code>mtcars</code> data set.</p>
 <pre><code>
@@ -528,9 +582,9 @@ Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</code></
 Mazda RX4      21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
 Mazda RX4 Wag  21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
 Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</code></pre>
-<ol start="2" style="list-style-type: lower-alpha">
-<li><code>%in%</code> and its corresponding negation</li>
-</ol>
+<li>
+<code>%in%</code> and its corresponding negation
+</li>
 <p><code>%in%</code> is an operator that matches first argument with its second and returns a logical vector. It is somewhat similar to the <code>==</code> operator, but more useful if there are multiple values that needs to be subsetted. For example, the code in the above example: &quot;mtcars[(mtcars$cyl==6)|(mtcars$cyl==8),]&quot; can be simplified as &quot;mtcars[mtcars$cyl %in% c(6, 8),]&quot;.</p>
 <pre class="r"><code>identical(mtcars[mtcars$cyl %in% c(6, 8),], mtcars[(mtcars$cyl==6)|(mtcars$cyl==8),])</code></pre>
 <pre><code>[1] TRUE</code></pre>
@@ -552,22 +606,139 @@ Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
 <pre class="r"><code>'%!in%' &lt;-function(x, y)!('%in%'(x,y))</code></pre>
 <pre class="r"><code>identical(mtcars[!mtcars$cyl %in% c(6, 8),],mtcars[mtcars$cyl %!in% c(6, 8),])</code></pre>
 <pre><code>[1] TRUE</code></pre>
-</div>
-<div id="dplyr-package" class="section level4">
-<h4>2) <a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf"><code>dplyr</code> package</a></h4>
-</div>
-</div>
-<div id="data-presentation" class="section level3">
-<h3>4. Data Presentation</h3>
-<p>Data set structured in a human friendly format dose not necessarily imply computer/machine friendly fashion or vise versa. Often times, therefore, data structure should be changed from long form to wide form or in the reversed manner. This may be even more important if one is sending and receiving data with co-workers who are not familiar with programming. <a href="https://cran.r-project.org/web/packages/tidyr/tidyr.pdf"><code>tidyr</code></a> and <a href="https://cran.rstudio.com/web/packages/reshape2/reshape2.pdf"><code>reshape</code></a> are two useful packages that</p>
-</div>
-<div id="nested-data-frame" class="section level3">
-<h3>5. Nested Data Frame</h3>
-</div>
-</div>
+</ol>
+<!--Using base R functions-->
+<h4>
+<li>
+<a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf"><code>dplyr</code> package</a>
+</li>
+</h4>
+</ol>
+<!--Filtering-->
+<h3>
+<li>
+Data Presentation
+</li>
+</h3>
+<ol type="a">
+<p>Data set structured in a human friendly format dose not necessarily imply computer/machine friendly fashion or vise versa. Often times, therefore, data structure should be changed from a human friendly wide form to a computer friendly long form or in the reversed manner. This may be even more important if one is sending and receiving data with co-workers who are not familiar with programming. <a href="https://cran.r-project.org/web/packages/tidyr/tidyr.pdf"><code>tidyr</code></a> and <a href="https://cran.rstudio.com/web/packages/reshape2/reshape2.pdf"><code>reshape</code></a> are two useful packages that converts between the two data format: long vs. wide.</p>
+<h4>
+<li>
+<code>tidyr</code>
+</li>
+</h4>
+<ol type="i">
+<li>
+Wide to long format using the <code>gather</code> function
+</li>
+</h4>
+<p>Consider the following sub data set from the <code>mtcars</code> data set.</p>
+<pre><code>         cars  mpg cyl  hp gear
+1   Mazda RX4 21.0   6 110    4
+2 Merc 450SLC 15.2   8 180    3</code></pre>
+<p>This is an example of a wide form data set where all variables are seperated in each column of the data frame. This may be a human friendly data format, however, may not be efficient for the computer to read in. Use the <code>gather</code> function from the <code>tidyr</code> package to convert the data from wide format to long format.</p>
+<p><code>gather</code> simply collapses multiple columns and its values from the original data frame into two columns: the ‘key’ and the ‘value’ column. The levels of the ‘key’ variable will be the name of the columns gathered, and the ‘value’ column will contain its corresponding values.</p>
+<p>Therefore, the function has 4 important arguments: data, key, value, and selected column. <br></p>
+<ul>
+<li>data: The original wide format data frame. <br></li>
+<li>key: Name of a column that will be newly created in the long format data set. The levels of the ‘key’ variable will be the column names of the ‘selected columns’ argument below. <br></li>
+<li>value: Name of a column that will be newly created in the long format data set. The values in the ‘value’ are the values from the ‘selected columns’ argument.</li>
+<li>selected columns: Specific columns to be gathered. These selected columns will be put into a single file formation. Column numbers may be used as well as its name.</li>
+</ul>
+<pre class="r"><code># Using column numbers
+subcars %&gt;%
+  gather(key=spec, value=performance, 2, 4)
+
+# Using column names
+subcars %&gt;%
+  gather(key=spec, value=performance, mpg, hp)</code></pre>
+<pre><code>         cars cyl gear spec performance
+1   Mazda RX4   6    4  mpg        21.0
+2 Merc 450SLC   8    3  mpg        15.2
+3   Mazda RX4   6    4   hp       110.0
+4 Merc 450SLC   8    3   hp       180.0</code></pre>
+<pre class="r"><code># Using column numbers with :
+subcars %&gt;%
+  gather(key=spec, value=values, 2:5)
+
+# Using column names with :
+subcars %&gt;%
+  gather(key=spec, value=values, mpg:gear)</code></pre>
+<pre><code>         cars spec values
+1   Mazda RX4  mpg   21.0
+2 Merc 450SLC  mpg   15.2
+3   Mazda RX4  cyl    6.0
+4 Merc 450SLC  cyl    8.0
+5   Mazda RX4   hp  110.0
+6 Merc 450SLC   hp  180.0
+7   Mazda RX4 gear    4.0
+8 Merc 450SLC gear    3.0</code></pre>
+<li>
+Long to wide format using the <code>spread</code> function
+</li>
+</h4>
+<p>The <code>spread</code> function will do the opposite of the <code>gather</code> function. This is useful when one is trying to present a data set.</p>
+<pre><code>         cars cyl gear spec performance
+1   Mazda RX4   6    4  mpg        21.0
+2 Merc 450SLC   8    3  mpg        15.2
+3   Mazda RX4   6    4   hp       110.0
+4 Merc 450SLC   8    3   hp       180.0</code></pre>
+<pre class="r"><code>longform %&gt;%
+  spread(key=spec, value=performance)</code></pre>
+<pre><code>         cars cyl gear  hp  mpg
+1   Mazda RX4   6    4 110 21.0
+2 Merc 450SLC   8    3 180 15.2</code></pre>
+<p>An important argument that might be useful is the <code>fill</code> argument. This argument replaces missing values, either implicit or explicit.</p>
+<ul>
+<li>Implicit Missing</li>
+</ul>
+<pre class="r"><code># Example of implicit missing
+implicit_missing%&gt;%
+  spread(key=spec, value=performance, fill=NA)</code></pre>
+<pre><code>         cars cyl gear spec performance
+1   Mazda RX4   6    4  mpg          21
+3   Mazda RX4   6    4   hp         110
+4 Merc 450SLC   8    3   hp         180</code></pre>
+<pre><code>         cars cyl gear  hp mpg
+1   Mazda RX4   6    4 110  21
+2 Merc 450SLC   8    3 180  NA</code></pre>
+<ul>
+<li>Explicit Missing</li>
+</ul>
+<pre class="r"><code># Example of implicit missing
+explicit_missing%&gt;%
+  spread(key=spec, value=performance, fill=NA)</code></pre>
+<pre><code>         cars cyl gear spec performance
+1   Mazda RX4   6    4  mpg          21
+2 Merc 450SLC   8    3  mpg          NA
+3   Mazda RX4   6    4   hp         110
+4 Merc 450SLC   8    3   hp         180</code></pre>
+<pre><code>         cars cyl gear  hp mpg
+1   Mazda RX4   6    4 110  21
+2 Merc 450SLC   8    3 180  NA</code></pre>
+</ol>
+<!--tidyr-->
+<h4>
+<li>
+<code>reshape2</code>
+</li>
+</h4>
+<ol type="i">
+</ol>
+<!--reshape2-->
+</ol>
+<!--Data Presentation-->
+<h3>
+<li>
+Nested Data Frame
+</li>
+</h3>
+</ol>
+<!-- Data Frame-->
+</ol>
+<!--Organizing Data-->
 <div id="tidyr" class="section level2">
 <h2>tidyr</h2>
-</div>
 </div>
 
 

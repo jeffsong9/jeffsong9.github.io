@@ -2,9 +2,8 @@
 output:
   html_document:
     toc: true
-    toc_float:
-      collapsed: false
-      smooth_scroll: false
+    toc_depth: 3
+    toc_float: true
     theme: cosmo
 ---
 <style>
@@ -55,22 +54,28 @@ body {
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(dplyr)
+pkg=c("dplyr", "tidyr")
+sapply(pkg, require, character=T)
+
 ```
 
-#Organizing Data<!--{-}-->
+
+<h1>Organizing Data</h1><ol type="I"><!--{-}-->
 Cleaning, reshaping, and organizing data is a second nature of 
 
 
-##I. List
+
+<h2><li>List</li></h2><ol type="1">
 List is the most general (and flexible) form of objects in `R`. <br>
 `[]` is used to access the sub-list, `[[]]` to access the element.
 
-###1. Create List
-a. `list()` function
+
+
+<h3><li>Create List</li></h3><ol type="a">
+
+<li>`list()` function</li>
 ```{r}
-alnum=list(c("a","b","c","d"), c(1,2)
-  )
+alnum=list(c("a","b","c","d"), c(1,2))
 ```
 
 ```{r, echo=F, comment=""}
@@ -108,15 +113,18 @@ alnum2$integer[2]   #equivalent of alnum2[[2]][2]
 
 cf) `unlist()`
 
-b. List as an output from a function
+<li>List as an output from a function</li>
 Functions such as `lapply` or `strsplit` generates its output in a list format.
 ```{r, comment=""}
 lapply(1:2, function(x) c(x-1,x+1))
 strsplit("abcdef", "c")
 ```
 
-###2. Merge Multiple Lists
-a. Into a list via `append` function
+</ol><!--Create List-->
+
+
+<h3><li>Merge Multiple Lists</li></h3><ol type="a">
+<li>Into a list via `append` function</li>
 
 When someone is trying to combine two or more lists together, this is probably what they want.
 ```{r, comment=""}
@@ -129,7 +137,7 @@ list(alnum, alnum2)
 ```
 
 
-b. Into a Data Frame
+<li>Into a Data Frame</li>
 Often times (especially when using a function that gives output in a list format) one may wish to coerce a list to a 2D matrix or data frame. The function `do.call` may be handy, in conjunction with `rbind`, `cbind`, `rbind.data.frame`.
 
 ```{r, comment=""}
@@ -139,15 +147,17 @@ lapply(1:2, function(x) c(x-1,x+1)) %>%
 
 cf) Check dplyr::bind_rows or plyr::rbind.fill for list with unequal length.
 
+</ol><!--Merge Multiple Lists-->
+</ol><!--List-->
 
 
-##II. Data Frame<!--{.tabset}-->
+<h2><li>Data Frame</li></h2><!--{.tabset}--><ol type="1">
 Data frame is a list of vectors of equal length with all contents being heterogeneous.<br>
 cf) matrix for homogeneous 
 
-###1. Create Data Frame
+<h3><li>Create Data Frame</li></h3><ol type="a">
 
-a. Using `base` `R` functions
+<li>Using `base` `R` functions</li>
 Use `data.frame`, `as.data.frame`, `rbind.data.frame`, `cbind.data.frame` to create or change existing data to data frame format. Note that the `data.frame` function builds data frame but `as.data.frame` is a function that coerce other objects into `dataframe` class.
 
 e.g.
@@ -168,26 +178,28 @@ check %>% as.data.frame(stringsAsFactors=F) %>% str()
 
 Note that the factors and levels are dropped.
 
-###2. Subsetting
+</ol><!--Create Data Frame-->
 
-####1) Column subset
-
-a. The `$` operator <br>
+<h3><li>Subsetting</li></h3><ol type="a">
+<h4><li>Column subset</li></h4><ol type="i">
+<li>The `$` operator</li>
 *df$colmn name*
 
-b. By the column number <br>
+<li>By the column number</li>
 *df[,column number]*
 
-c. By the column name <br>
+<li>By the column name</li>
 *df[, \"column name\"]*
 
-d. <a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf">`dplyr` package</a>
+<li><a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf">`dplyr` package</a></li>
 
 Utilize the function `select` from the `dplyr` package.<br>
 *select(df, column name)* <br>
 recommend using it in conjunction with the pipe operator `%>%` and other functions such as `filter`, `summarize` or `mutate`.
 
-#####e.g.
+</ol><!--Column subset-->
+
+e.g.
 
 ```{r, comment=""}
 head(mtcars)
@@ -206,7 +218,7 @@ head(mtcars$mpg)
 ```
 <br>
 
-#####Note
+Note
 
 * Subset multiple columns
 ```{r, eval=F, comment=""}
@@ -229,15 +241,14 @@ To be updated...
 
 <br>
 
-####2) Row subset
-
-a. By the row number <br>
+<h4><li>Row subset</li></h4><ol type="i">
+<li>By the row number</li>
 *df[row number,]*
 
-b. By the row name <br>
+<li>By the row name</li>
 *df[\"row name\"", ]*
 
-#####e.g.
+e.g.
 
 ```{r, eval=F, comment=""}
 mtcars[1,]
@@ -248,10 +259,12 @@ mtcars["Mazda RX4",]
 mtcars[1,]
 ```
 
-###3. Filtering
+</ol><!--Row subset-->
+</ol><!--subsetting-->
 
-####1) Using base R functions
-a. `==` and `!=`
+<h3><li>Filtering</li></h3><ol type="a">
+<h4><li>Using base R functions</li></h4><ol type="i">
+<li>`==` and `!=`</li>
 
 df[df$"column name"=="value of interest"]
 df[df$"column name"!="value of interest"]
@@ -275,7 +288,7 @@ mtcars[(mtcars$cyl==6) & (mtcars$hp==110),]
 ```
 
 
-b. `%in%` and its corresponding negation
+<li>`%in%` and its corresponding negation</li>
 
 `%in%` is an operator that matches first argument with its second and returns a logical vector. It is somewhat similar to the `==` operator, but more useful if there are multiple values that needs to be subsetted. For example, the code in the above example: \"mtcars[(mtcars\$cyl==6)\|(mtcars\$cyl==8),]\" can be simplified as \"mtcars[mtcars\$cyl %in% c(6, 8),]\".
 ```{r, comment=""}
@@ -296,16 +309,127 @@ Note that `mtcars[mtcars$cyl !%in% c(6, 8),]` would be a wrong code. I personall
 identical(mtcars[!mtcars$cyl %in% c(6, 8),],mtcars[mtcars$cyl %!in% c(6, 8),])
 ```
 
-####2) <a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf">`dplyr` package</a>
+</ol><!--Using base R functions-->
+
+<h4><li><a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf">`dplyr` package</a></li></h4>
 
 
 
+</ol><!--Filtering-->
 
-###4. Data Presentation
-Data set structured in a human friendly format dose not necessarily imply computer/machine friendly fashion or vise versa. Often times, therefore, data structure should be changed from long form to wide form or in the reversed manner. This may be even more important if one is sending and receiving data with co-workers who are not familiar with programming.  <a href="https://cran.r-project.org/web/packages/tidyr/tidyr.pdf">`tidyr`</a> and <a href="https://cran.rstudio.com/web/packages/reshape2/reshape2.pdf">`reshape`</a> are two useful packages that 
+<h3><li>Data Presentation</li></h3><ol type="a">
+Data set structured in a human friendly format dose not necessarily imply computer/machine friendly fashion or vise versa. Often times, therefore, data structure should be changed from a human friendly wide form to a computer friendly long form or in the reversed manner. This may be even more important if one is sending and receiving data with co-workers who are not familiar with programming.  <a href="https://cran.r-project.org/web/packages/tidyr/tidyr.pdf">`tidyr`</a> and <a href="https://cran.rstudio.com/web/packages/reshape2/reshape2.pdf">`reshape`</a> are two useful packages that converts between the two data format: long vs. wide.
+
+<h4><li>`tidyr`</li></h4><ol type="i">
+<li>Wide to long format using the `gather` function</li></h4>
+Consider the following sub data set from the `mtcars` data set.
+```{r, comment="", echo=F}
+subcars=mtcars[c(1,14),c("mpg", "cyl", "hp", "gear")]
+subcars<-cbind(cars=rownames(subcars), subcars)
+rownames(subcars)<-NULL
+subcars
+```
+This is an example of a wide form data set where all variables are seperated in each column of the data frame. This may be a human friendly data format, however, may not be efficient for the computer to read in. Use the `gather` function from the `tidyr` package to convert the data from wide format to long format.
+
+`gather` simply collapses multiple columns and its values from the original data frame into two columns: the 'key' and the 'value' column. The levels of the 'key' variable will be the name of the columns gathered, and the 'value' column will contain its corresponding values.
+
+Therefore, the function has 4 important arguments: data, key, value, and selected column. <br>
+
+* data: The original wide format data frame. <br>
+* key: Name of a column that will be newly created in the long format data set. The levels of the 'key' variable will be the column names of the 'selected columns' argument below. <br>
+* value: Name of a column that will be newly created in the long format data set. The values in the 'value' are the values from the 'selected columns' argument.
+* selected columns: Specific columns to be gathered. These selected columns will be put into a single file formation. Column numbers may be used as well as its name.
 
 
-###5. Nested Data Frame
+```{r, eval=F}
+# Using column numbers
+subcars %>%
+  gather(key=spec, value=performance, 2, 4)
+
+# Using column names
+subcars %>%
+  gather(key=spec, value=performance, mpg, hp)
+```
+
+```{r, echo=F, comment=""}
+subcars %>%
+  gather(key=spec, value=performance, mpg, hp)
+```
 
 
+```{r, eval=F}
+# Using column numbers with :
+subcars %>%
+  gather(key=spec, value=values, 2:5)
+
+# Using column names with :
+subcars %>%
+  gather(key=spec, value=values, mpg:gear)
+```
+
+```{r, echo=F, comment=""}
+subcars %>%
+  gather(key=spec, value=values, mpg:gear)
+```
+
+<li>Long to wide format using the `spread` function</li></h4>
+The `spread` function will do the opposite of the `gather` function. This is useful when one is trying to present a data set.
+
+```{r, comment="", echo=F}
+subcars %>%
+  gather(key=spec, value=performance, mpg, hp)->longform
+longform
+```
+
+```{r, comment=""}
+longform %>%
+  spread(key=spec, value=performance)
+```
+
+An important argument that might be useful is the `fill` argument. This argument replaces missing values, either implicit or explicit.
+
+
+- Implicit Missing
+```{r, eval=F}
+# Example of implicit missing
+implicit_missing%>%
+  spread(key=spec, value=performance, fill=NA)
+```
+
+```{r, echo=F, comment=""}
+# Example of implicit missing
+print(longform[-2,]) %>%
+  spread(key=spec, value=performance, fill=NA)
+
+```
+
+- Explicit Missing
+```{r, eval=F}
+# Example of implicit missing
+explicit_missing%>%
+  spread(key=spec, value=performance, fill=NA)
+```
+
+```{r, echo=F, comment=""}
+# Example of implicit missing
+longform2=longform
+longform2$performance[2]<-NA
+
+print(longform2)%>%
+  spread(key=spec, value=performance, fill=NA)
+
+```
+
+
+
+</ol><!--tidyr-->
+
+<h4><li>`reshape2`</li></h4><ol type="i">
+
+</ol><!--reshape2-->
+</ol><!--Data Presentation-->
+
+<h3><li>Nested Data Frame</li></h3>
+</ol><!-- Data Frame-->
+</ol><!--Organizing Data-->
 ##tidyr
