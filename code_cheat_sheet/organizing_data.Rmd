@@ -1,0 +1,311 @@
+---
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: cosmo
+---
+<style>
+body {
+    position: absolute;
+    left: 0px;}
+</style>
+
+<!--html_preserve-->
+<div class="container">
+<!-- Static navbar -->
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="../index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+        
+          <li class="">
+					<a href="/get_to_know_tek.html">Get To Know Tek</a>
+	</li>              
+				  
+				  
+	<li class="">
+					<a href="/past_project.html">Past Project</a>
+	</li>
+
+	<li class="">
+					<a href="/cheat_sheet.html">Cheat Sheet</a>
+	</li>
+
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container-fluid -->
+</nav><!--navbar navbar-default-->
+</div>
+<!--/html_preserve-->
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+```
+
+#Organizing Data<!--{-}-->
+Cleaning, reshaping, and organizing data is a second nature of 
+
+
+##I. List
+List is the most general (and flexible) form of objects in `R`. <br>
+`[]` is used to access the sub-list, `[[]]` to access the element.
+
+###1. Create List
+a. `list()` function
+```{r}
+alnum=list(c("a","b","c","d"), c(1,2)
+  )
+```
+
+```{r, echo=F, comment=""}
+alnum
+```
+
+The first sub-list of 'alnum' would be the character vector.
+This character vector may be retrieved by running the following code.
+```{r, comment=""}
+alnum[[1]]
+```
+Similarly, the following code will retrieve the second element of the second sub-list.
+
+```{r, comment=""}
+alnum[[2]][2]
+```
+
+One can also name the sub-list simply adding labels before the sub list.
+
+```{r}
+alnum2=list(
+  alphabet=c("e","f","g","h"), 
+  integer=c(3,4))
+```
+
+```{r, echo=F, comment=""}
+alnum2
+```
+
+When the sub-lists are labeled, `[[]]` is no longer necessary.
+```{r, comment=""}
+alnum2$alphabet     #equivalent of alnum2[[1]]
+alnum2$integer[2]   #equivalent of alnum2[[2]][2]
+```
+
+cf) `unlist()`
+
+b. List as an output from a function
+Functions such as `lapply` or `strsplit` generates its output in a list format.
+```{r, comment=""}
+lapply(1:2, function(x) c(x-1,x+1))
+strsplit("abcdef", "c")
+```
+
+###2. Merge Multiple Lists
+a. Into a list via `append` function
+
+When someone is trying to combine two or more lists together, this is probably what they want.
+```{r, comment=""}
+append(alnum, alnum2)
+```
+
+Do not get confused with the following code.
+```{r, comment=""}
+list(alnum, alnum2)
+```
+
+
+b. Into a Data Frame
+Often times (especially when using a function that gives output in a list format) one may wish to coerce a list to a 2D matrix or data frame. The function `do.call` may be handy, in conjunction with `rbind`, `cbind`, `rbind.data.frame`.
+
+```{r, comment=""}
+lapply(1:2, function(x) c(x-1,x+1)) %>%
+  do.call("rbind", .)
+```
+
+cf) Check dplyr::bind_rows or plyr::rbind.fill for list with unequal length.
+
+
+
+##II. Data Frame<!--{.tabset}-->
+Data frame is a list of vectors of equal length with all contents being heterogeneous.<br>
+cf) matrix for homogeneous 
+
+###1. Create Data Frame
+
+a. Using `base` `R` functions
+Use `data.frame`, `as.data.frame`, `rbind.data.frame`, `cbind.data.frame` to create or change existing data to data frame format. Note that the `data.frame` function builds data frame but `as.data.frame` is a function that coerce other objects into `dataframe` class.
+
+e.g.
+Check the output difference between the two codes.
+```{r, comment=""}
+data.frame(matrix(1:9, nrow=3), letters[1:3])
+as.data.frame(matrix(1:9, nrow=3), letters[1:3])
+```
+
+Useful argument.
+`stringsAsFactors` (logical): `F` if the character vector should not be converted to a factor.
+e.g.
+```{r, comment=""}
+check=matrix(letters[1:9], nrow=3, byrow=T)
+check %>% as.data.frame() %>% str()
+check %>% as.data.frame(stringsAsFactors=F) %>% str()
+```
+
+Note that the factors and levels are dropped.
+
+###2. Subsetting
+
+####1) Column subset
+
+a. The `$` operator <br>
+*df$colmn name*
+
+b. By the column number <br>
+*df[,column number]*
+
+c. By the column name <br>
+*df[, \"column name\"]*
+
+d. <a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf">`dplyr` package</a>
+
+Utilize the function `select` from the `dplyr` package.<br>
+*select(df, column name)* <br>
+recommend using it in conjunction with the pipe operator `%>%` and other functions such as `filter`, `summarize` or `mutate`.
+
+#####e.g.
+
+```{r, comment=""}
+head(mtcars)
+```
+
+```{r, eval=F, comment=""}
+mtcars$mpg
+mtcars[,1]
+mtcars[,"mpg"]
+mtcars %>%
+  select(mpg)
+```
+
+```{r, echo=F, comment=""}
+head(mtcars$mpg)
+```
+<br>
+
+#####Note
+
+* Subset multiple columns
+```{r, eval=F, comment=""}
+mtcars[,1:5]
+mtcars[,c(1,3,5)]
+mtcars[,c("mpg", "disp", "drat")]
+```
+
+* Complement
+```{r, eval=F, comment=""}
+mtcars[,-c(1,3,5)]
+
+```
+
+* S4 objects
+Check `@` for S4. <br>
+To be updated...
+
+
+
+<br>
+
+####2) Row subset
+
+a. By the row number <br>
+*df[row number,]*
+
+b. By the row name <br>
+*df[\"row name\"", ]*
+
+#####e.g.
+
+```{r, eval=F, comment=""}
+mtcars[1,]
+mtcars["Mazda RX4",]
+```
+
+```{r, echo=F, comment=""}
+mtcars[1,]
+```
+
+###3. Filtering
+
+####1) Using base R functions
+a. `==` and `!=`
+
+df[df$"column name"=="value of interest"]
+df[df$"column name"!="value of interest"]
+
+e.g.
+There are 3 different types of cylinders in the `mtcars` data set.
+```{r, echo=F, comment=""}
+table(mtcars$cyl)
+```
+
+Use the logical operators `==` or `!=` to filter data with certain cylinder number.
+```{r, comment=""}
+mtcars[mtcars$cyl==6,]
+mtcars[mtcars$cyl!=8,]
+```
+
+Logical operators such as `|` and `&` may also be applied.
+```{r, comment=""}
+mtcars[(mtcars$cyl==6)|(mtcars$cyl==8),]
+mtcars[(mtcars$cyl==6) & (mtcars$hp==110),]
+```
+
+
+b. `%in%` and its corresponding negation
+
+`%in%` is an operator that matches first argument with its second and returns a logical vector. It is somewhat similar to the `==` operator, but more useful if there are multiple values that needs to be subsetted. For example, the code in the above example: \"mtcars[(mtcars\$cyl==6)\|(mtcars\$cyl==8),]\" can be simplified as \"mtcars[mtcars\$cyl %in% c(6, 8),]\".
+```{r, comment=""}
+identical(mtcars[mtcars$cyl %in% c(6, 8),], mtcars[(mtcars$cyl==6)|(mtcars$cyl==8),])
+```
+
+Similarly, `%in%` may be negated as the following code.
+```{r, comment=""}
+mtcars[!mtcars$cyl %in% c(6, 8),]
+```
+
+Note that `mtcars[mtcars$cyl !%in% c(6, 8),]` would be a wrong code. I personally like to introduce a new function `%!in%`that negates the `%in%` function.
+```{r}
+'%!in%' <-function(x, y)!('%in%'(x,y))
+```
+
+```{r, comment=""}
+identical(mtcars[!mtcars$cyl %in% c(6, 8),],mtcars[mtcars$cyl %!in% c(6, 8),])
+```
+
+####2) <a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf">`dplyr` package</a>
+
+
+
+
+###4. Data Presentation
+Data set structured in a human friendly format dose not necessarily imply computer/machine friendly fashion or vise versa. Often times, therefore, data structure should be changed from long form to wide form or in the reversed manner. This may be even more important if one is sending and receiving data with co-workers who are not familiar with programming.  <a href="https://cran.r-project.org/web/packages/tidyr/tidyr.pdf">`tidyr`</a> and <a href="https://cran.rstudio.com/web/packages/reshape2/reshape2.pdf">`reshape`</a> are two useful packages that 
+
+
+###5. Nested Data Frame
+
+
+##tidyr
