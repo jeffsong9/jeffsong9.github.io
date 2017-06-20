@@ -2,9 +2,8 @@
 output:
   html_document:
     toc: true
-    toc_float:
-      collapsed: false
-      smooth_scroll: false
+    toc_depth: 3
+    toc_float: true
     theme: cosmo
 ---
 
@@ -58,16 +57,16 @@ knitr::opts_chunk$set(echo = TRUE)
 library(rvest)
 ```
 
-#HTML Scraping and Parsing
+<h1>HTML Scraping and Parsing</h1><ol type="I">
 Web scraping and parsing was(and will be) an important part of my research interest. There are many useful packages in `R` that makes web scraping simple: `rvest`, `XML`, `RCurl`, `curl`, `RSelenium`, and etc. 
 
-## Using the <a href="https://cran.r-project.org/web/packages/rvest/rvest.pdf">`rvest` package</a>
+<h2><li>Using the <a href="https://cran.r-project.org/web/packages/rvest/rvest.pdf">`rvest` package</a></li></h2><ol type="1">
 ```{r, eval=F}
 install.packages("rvest") #if you haven't installed `rvest` yet
 require(rvest) #load the `rvest` package
 ```
 
-###`read_html`
+<h3><li>`read_html`</li></h3>
 read_html(*url*)
 
 Argument
@@ -77,7 +76,7 @@ Argument
 read_html("https://jeffsong9.github.io/")
 ```
 
-###`html_nodes`
+<h3><li>`html_nodes`</li></h3>
 * Usage: Parse `HTML` documents using XPath or CSS selector.
 html\_nodes(*html\_doc*, *css*, *xpath*)
 
@@ -112,7 +111,7 @@ read_html("https://jeffsong9.github.io/") %>%
   
 cf) `html_node`
 
-###`html_attr`
+<h3><li>`html_attr`</li></h3>
 Usage: Extrac attributes with a given name
 html_attr(*html\_doc*, *name*)
 
@@ -140,4 +139,4 @@ cf) html_attrs
 
 
 
-
+</ol><!--HTML Scraping and parsing-->
