@@ -260,74 +260,51 @@ body {
 </div>
 
 <h1>
-HTML Scraping and Parsing
+Text Mining
 </h1>
 <ol type="I">
-<p>Web scraping and parsing was(and will be) an important part of my research interest. There are many useful packages in <code>R</code> that makes web scraping simple: <code>rvest</code>, <code>XML</code>, <code>RCurl</code>, <code>curl</code>, <code>RSelenium</code>, and etc.</p>
 <h2>
 <li>
-Using the <a href="https://cran.r-project.org/web/packages/rvest/rvest.pdf"><code>rvest</code> package</a>
+Handling and Processing Strings
 </li>
 </h2>
 <ol type="1">
-<pre class="r"><code>install.packages(&quot;rvest&quot;) #if you haven't installed `rvest` yet
-require(rvest) #load the `rvest` package</code></pre>
 <h3>
 <li>
-<code>read_html</code>
+Reading in Text Data
 </li>
 </h3>
-<p>read_html(<em>url</em>)</p>
-<p>Argument <em>url</em>: A url string</p>
-<pre class="r"><code>read_html(&quot;https://jeffsong9.github.io/&quot;)</code></pre>
-<pre><code>{xml_document}
-&lt;html lang=&quot;en&quot;&gt;
-[1] &lt;head&gt;\n&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset= ...
-[2] &lt;body&gt;\n\n    &lt;div class=&quot;container&quot;&gt;\n\n      &lt;!-- Static navbar -- ...</code></pre>
+<p>read text data in table format</p>
+<p>read.table(): main function to read file in table format read.csv(): reads csv files separated by a comma“,” read.csv2(): reads csv files separated by a semicolon“;” read.delim(): reads files separated by tabs“” read.delim2(): similar to read.delim() read.fwf(): read fixed width format files</p>
+<p>stringAsFactors=F</p>
+<p>Raw text data readLines()</p>
 <h3>
 <li>
-<code>html_nodes</code>
+String Manipulation
 </li>
 </h3>
-<ul>
-<li><p>Usage: Parse <code>HTML</code> documents using XPath or CSS selector. html_nodes(<em>html_doc</em>, <em>css</em>, <em>xpath</em>)</p></li>
-<li><p>Argument <em>html_doc</em>: A <code>HTML</code> document or a node set <em>css</em>: css selector <em>xpath</em>: xpath selector</p></li>
-<li><p>e.g.: read_html(<em>some_url</em>) %&gt;%<br> html_nodes(xpath=“//b”) Extracts all bold font text using the xpath selector //b.</p></li>
-</ul>
-<p>read_html(<em>some_url</em>) %&gt;%<br> html_nodes(xpath=’//div <span class="citation">[@id=&quot;*something*&quot;]</span>)</p>
-<p>read_html(<em>some_url</em>) %&gt;%<br> html_nodes(“center”) Extract using css selector center</p>
-<ul>
-<li>chain subsetting read_html(<em>some_url</em>) %&gt;%<br> html_nodes(“center”) %&gt;%<br> html_nodes(“font”)</li>
-</ul>
-<pre class="r"><code>read_html(&quot;https://jeffsong9.github.io/&quot;) %&gt;%
-  html_nodes(xpath=&quot;//div&quot;) %&gt;%
-  head(5)</code></pre>
-<pre><code>{xml_nodeset (5)}
-[1] &lt;div class=&quot;container&quot;&gt;\n\n      &lt;!-- Static navbar --&gt;\n      &lt;nav  ...
-[2] &lt;div class=&quot;container-fluid&quot;&gt;\n          &lt;div class=&quot;navbar-header&quot;&gt; ...
-[3] &lt;div class=&quot;navbar-header&quot;&gt;\n            &lt;button type=&quot;button&quot; class ...
-[4] &lt;div id=&quot;navbar&quot; class=&quot;navbar-collapse collapse&quot;&gt;\n            &lt;ul  ...
-[5] &lt;div id=&quot;page-wrap&quot;&gt;\n  &lt;div id=&quot;wrap-inner&quot;&gt;\n    &lt;div id=&quot;content&quot; ...</code></pre>
-<p>cf) <code>html_node</code></p>
-<h3>
-<li>
-<code>html_attr</code>
-</li>
-</h3>
-<p>Usage: Extrac attributes with a given name html_attr(<em>html_doc</em>, <em>name</em>)</p>
-<p>Arguments: <em>html node</em>: A<code>HTML</code> document or a node set <em>name</em>: Name of attribute to extract</p>
-<p>e.g. read_html(<em>some_url</em>) %&gt;%<br> html_nodes(xpath=“//a”) %&gt;%<br> html_attr(name=“href”)</p>
-<pre class="r"><code>read_html(&quot;https://jeffsong9.github.io/&quot;) %&gt;%
-  html_nodes(xpath=&quot;//img [@class='photo']&quot;)</code></pre>
-<pre><code>{xml_nodeset (1)}
-[1] &lt;img class=&quot;photo&quot; src=&quot;/images/songt.jpg&quot; alt=&quot;TaikgunSong&quot; style=&quot; ...</code></pre>
-<pre class="r"><code>read_html(&quot;https://jeffsong9.github.io/&quot;) %&gt;%
-  html_nodes(xpath=&quot;//img [@class='photo']&quot;) %&gt;%
-  html_attr(name=&quot;src&quot;)</code></pre>
-<pre><code>[1] &quot;/images/songt.jpg&quot;</code></pre>
-<p>cf) html_attrs</p>
-</ol>
-<!--HTML Scraping and parsing-->
+<p>grep gsub gregexpr paste paste0 substr str_split</p>
+<p>basic functions nchar():number of characters tolower():convert to lower case toupper():convert to upper case casefold():case folding chartr():character translation abbreviate():abbreviation substring():substrings of a character vector substr():substrings of a character vec</p>
+<p>print():generic printing. argument quote=F noquote():print with no quotes cat():concatenation format():special formats toString():convert to string sprintf():printing</p>
+<p>pkg stringr nchar on factor fails. use str_length str_trim</p>
+<p>regex Metacharacters <!--
+. the period or dot\\.
+$the dollar sign\\$
+*the asterisk or star\\*
++the plus sign\\+
+?the question mark\\?
+|the vertical bar or pipe symbol\\|
+\the backslash\\\\
+^the caret\\^
+[the opening square bracket\\[
+]the closing square bracket\\]
+{the opening curly bracket\\{
+}the closing curly bracket\\}
+(the opening round bracket\\(
+)the closing round bracket\\)
+--></p>
+<p>encoding</p>
+<p>R has five main types of objects to store data: vector, factor, matrix (and array), data.frame, and list. character string</p>
 
 
 
