@@ -76,7 +76,9 @@ Argument
 read_html("https://jeffsong9.github.io/")
 ```
 
-<h3><li>`html_nodes`</li></h3>
+<h3><li>`html_nodes`</li></h3><ol type="a">
+
+<h4><li>Single Node Set</li></h4>
 * Usage: Parse `HTML` documents using XPath or CSS selector.
 html\_nodes(*html\_doc*, *css*, *xpath*)
 
@@ -111,6 +113,23 @@ read_html("https://jeffsong9.github.io/") %>%
   
 cf) `html_node`
 
+<h4><li>Multiple Node Sets</li></h4>
+One may be interested in extracting multiple node sets. I find it convenient to save all XPath queries in a vector and use the `lapply` function in conjunction with the `html_nodes` function.
+
+
+```{r, comment=""}
+paths=c(profile='//div [@class="profile-info-mod profile-essentials"]',
+        side_bar='//div [@class="floating-sidebar-float"]')
+
+lapply(paths, function(x) read_html("https://jeffsong9.github.io/") %>%
+  html_nodes(xpath=x))
+```
+
+
+
+
+</ol><!--html_nodes-->
+
 <h3><li>`html_attr`</li></h3>
 Usage: Extrac attributes with a given name
 html_attr(*html\_doc*, *name*)
@@ -138,5 +157,5 @@ read_html("https://jeffsong9.github.io/") %>%
 cf) html_attrs
 
 
-
+</ol><!--rvest package-->
 </ol><!--HTML Scraping and parsing-->

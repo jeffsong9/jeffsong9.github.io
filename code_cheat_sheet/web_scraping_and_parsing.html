@@ -289,6 +289,12 @@ require(rvest) #load the `rvest` package</code></pre>
 <code>html_nodes</code>
 </li>
 </h3>
+<ol type="a">
+<h4>
+<li>
+Single Node Set
+</li>
+</h4>
 <ul>
 <li><p>Usage: Parse <code>HTML</code> documents using XPath or CSS selector. html_nodes(<em>html_doc</em>, <em>css</em>, <em>xpath</em>)</p></li>
 <li><p>Argument <em>html_doc</em>: A <code>HTML</code> document or a node set <em>css</em>: css selector <em>xpath</em>: xpath selector</p></li>
@@ -309,6 +315,26 @@ require(rvest) #load the `rvest` package</code></pre>
 [4] &lt;div id=&quot;navbar&quot; class=&quot;navbar-collapse collapse&quot;&gt;\n            &lt;ul  ...
 [5] &lt;div id=&quot;page-wrap&quot;&gt;\n  &lt;div id=&quot;wrap-inner&quot;&gt;\n    &lt;div id=&quot;content&quot; ...</code></pre>
 <p>cf) <code>html_node</code></p>
+<h4>
+<li>
+Multiple Node Sets
+</li>
+</h4>
+<p>One may be interested in extracting multiple node sets. I find it convenient to save all XPath queries in a vector and use the <code>lapply</code> function in conjunction with the <code>html_nodes</code> function.</p>
+<pre class="r"><code>paths=c(profile='//div [@class=&quot;profile-info-mod profile-essentials&quot;]',
+        side_bar='//div [@class=&quot;floating-sidebar-float&quot;]')
+
+lapply(paths, function(x) read_html(&quot;https://jeffsong9.github.io/&quot;) %&gt;%
+  html_nodes(xpath=x))</code></pre>
+<pre><code>$profile
+{xml_nodeset (1)}
+[1] &lt;div class=&quot;profile-info-mod profile-essentials&quot;&gt;\n            &lt;h2 c ...
+
+$side_bar
+{xml_nodeset (1)}
+[1] &lt;div class=&quot;floating-sidebar-float&quot;&gt;\n            &lt;div class=&quot;profil ...</code></pre>
+</ol>
+<!--html_nodes-->
 <h3>
 <li>
 <code>html_attr</code>
@@ -326,6 +352,8 @@ require(rvest) #load the `rvest` package</code></pre>
   html_attr(name=&quot;src&quot;)</code></pre>
 <pre><code>[1] &quot;/images/songt.jpg&quot;</code></pre>
 <p>cf) html_attrs</p>
+</ol>
+<!--rvest package-->
 </ol>
 <!--HTML Scraping and parsing-->
 
