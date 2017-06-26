@@ -260,619 +260,74 @@ body {
 </div>
 
 <h1>
-Organizing Data
+Miscellaneous
 </h1>
 <ol type="I">
-<!--{-}-->
-<p>Formatting, reshaping, and organizing data should be a second nature of every data scientists.</p>
 <h2>
 <li>
-List
+Updating R
 </li>
 </h2>
 <ol type="1">
-<p>List is the most general (and flexible) form of objects in <code>R</code>. <br> <code>[]</code> is used to access the sub-list, <code>[[]]</code> to access the element.</p>
-<h3>
-<li>
-Create List
-</li>
-</h3>
-<ol type="a">
-<li>
-<code>list()</code> function
-</li>
-<pre class="r"><code>alnum=list(c(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;), c(1,2))</code></pre>
-<pre><code>[[1]]
-[1] &quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;
-
-[[2]]
-[1] 1 2</code></pre>
-<p>The first sub-list of ‘alnum’ would be the character vector. This character vector may be retrieved by running the following code.</p>
-<pre class="r"><code>alnum[[1]]</code></pre>
-<pre><code>[1] &quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;</code></pre>
-<p>Similarly, the following code will retrieve the second element of the second sub-list.</p>
-<pre class="r"><code>alnum[[2]][2]</code></pre>
-<pre><code>[1] 2</code></pre>
-<p>One can also name the sub-list simply adding labels before the sub list.</p>
-<pre class="r"><code>alnum2=list(
-  alphabet=c(&quot;e&quot;,&quot;f&quot;,&quot;g&quot;,&quot;h&quot;), 
-  integer=c(3,4))</code></pre>
-<pre><code>$alphabet
-[1] &quot;e&quot; &quot;f&quot; &quot;g&quot; &quot;h&quot;
-
-$integer
-[1] 3 4</code></pre>
-<p>When the sub-lists are labeled, <code>[[]]</code> is no longer necessary.</p>
-<pre class="r"><code>alnum2$alphabet     #equivalent of alnum2[[1]]</code></pre>
-<pre><code>[1] &quot;e&quot; &quot;f&quot; &quot;g&quot; &quot;h&quot;</code></pre>
-<pre class="r"><code>alnum2$integer[2]   #equivalent of alnum2[[2]][2]</code></pre>
-<pre><code>[1] 4</code></pre>
-<p>cf) <code>as.list()</code> <br> cf) <code>unlist()</code></p>
-<li>
-List as an output from a function
-</li>
-<p>Functions such as <code>lapply</code> or <code>strsplit</code> generates its output in a list format.</p>
-<pre class="r"><code>lapply(1:2, function(x) c(x-1,x+1))</code></pre>
-<pre><code>[[1]]
-[1] 0 2
-
-[[2]]
-[1] 1 3</code></pre>
-<pre class="r"><code>strsplit(&quot;abcdef&quot;, &quot;c&quot;)</code></pre>
-<pre><code>[[1]]
-[1] &quot;ab&quot;  &quot;def&quot;</code></pre>
 </ol>
-<!--Create List-->
-<h3>
-<li>
-Merge Multiple Lists
-</li>
-</h3>
-<ol type="a">
-<li>
-Into a list via <code>append</code> function
-</li>
-<p>When someone is trying to combine two or more lists together, this is probably what they want.</p>
-<pre class="r"><code>append(alnum, alnum2)</code></pre>
-<pre><code>[[1]]
-[1] &quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;
-
-[[2]]
-[1] 1 2
-
-$alphabet
-[1] &quot;e&quot; &quot;f&quot; &quot;g&quot; &quot;h&quot;
-
-$integer
-[1] 3 4</code></pre>
-<p>Do not get confused with the following code.</p>
-<pre class="r"><code>list(alnum, alnum2)</code></pre>
-<pre><code>[[1]]
-[[1]][[1]]
-[1] &quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;
-
-[[1]][[2]]
-[1] 1 2
-
-
-[[2]]
-[[2]]$alphabet
-[1] &quot;e&quot; &quot;f&quot; &quot;g&quot; &quot;h&quot;
-
-[[2]]$integer
-[1] 3 4</code></pre>
-<li>
-Into a Data Frame
-</li>
-<p>Often times (especially when using a function that gives output in a list format) one may wish to coerce a list to a 2D matrix or into a data frame. The function <code>do.call</code> may be handy in this case in conjunction with functions such as <code>rbind</code>, <code>cbind</code>, <code>rbind.data.frame</code>, <code>cbind.data.frame</code>.</p>
-<pre class="r"><code>lapply(1:2, function(x) c(x-1,x+1)) %&gt;%
-  do.call(&quot;rbind&quot;, .)</code></pre>
-<pre><code>     [,1] [,2]
-[1,]    0    2
-[2,]    1    3</code></pre>
-<p>cf) Check dplyr::bind_rows or plyr::rbind.fill for list with unequal length.</p>
-</ol>
-<!--Merge Multiple Lists-->
-</ol>
-<!--List-->
+<!--Updating R-->
 <h2>
 <li>
-Data Frame
+Loading R packages
 </li>
 </h2>
-<!--{.tabset}-->
 <ol type="1">
-<p>Data frame is a list of vectors of equal length with all contents being heterogeneous.<br> cf) matrix for homogeneous</p>
+<p>There are multiple ways to load an R package. The most general way is to load the package using the <code>library</code> function or the <code>require</code> function on the script.</p>
+<pre class="r"><code>library(some_package)
+require(some_pacakge)</code></pre>
+<p>If one is using a GUI(Graphic User Interphase) such as the <code>RStudio</code>, then a simple click on the check box next to the installed package tab will load the desired library. However, what if one needs to load multiple packages at once? What if some of these packages are uninstalled?</p>
 <h3>
 <li>
-Create Data Frame
+Loading Multiple R packages
 </li>
 </h3>
-<ol type="a">
-<li>
-Using <code>base</code> <code>R</code> functions
-</li>
-<p>Use <code>data.frame</code>, <code>as.data.frame</code>, <code>rbind.data.frame</code>, <code>cbind.data.frame</code> to create or change existing data to data frame format. Note that the <code>data.frame</code> function builds data frame but <code>as.data.frame</code> is a function that coerce other objects into <code>dataframe</code> class.</p>
-<p>e.g. Check the output difference between the two codes.</p>
-<pre class="r"><code>data.frame(matrix(1:9, nrow=3), letters[1:3])</code></pre>
-<pre><code>  X1 X2 X3 letters.1.3.
-1  1  4  7            a
-2  2  5  8            b
-3  3  6  9            c</code></pre>
-<pre class="r"><code>as.data.frame(matrix(1:9, nrow=3), letters[1:3])</code></pre>
-<pre><code>  V1 V2 V3
-a  1  4  7
-b  2  5  8
-c  3  6  9</code></pre>
-<p>Useful argument. <code>stringsAsFactors</code> (logical): <code>F</code> if the character vector should not be converted to a factor. e.g.</p>
-<pre class="r"><code>check=matrix(letters[1:9], nrow=3, byrow=T)
-check %&gt;% as.data.frame() %&gt;% str()</code></pre>
-<pre><code>'data.frame':   3 obs. of  3 variables:
- $ V1: Factor w/ 3 levels &quot;a&quot;,&quot;d&quot;,&quot;g&quot;: 1 2 3
- $ V2: Factor w/ 3 levels &quot;b&quot;,&quot;e&quot;,&quot;h&quot;: 1 2 3
- $ V3: Factor w/ 3 levels &quot;c&quot;,&quot;f&quot;,&quot;i&quot;: 1 2 3</code></pre>
-<pre class="r"><code>check %&gt;% as.data.frame(stringsAsFactors=F) %&gt;% str()</code></pre>
-<pre><code>'data.frame':   3 obs. of  3 variables:
- $ V1: chr  &quot;a&quot; &quot;d&quot; &quot;g&quot;
- $ V2: chr  &quot;b&quot; &quot;e&quot; &quot;h&quot;
- $ V3: chr  &quot;c&quot; &quot;f&quot; &quot;i&quot;</code></pre>
-<p>Note that the factors and levels are dropped.</p>
-</ol>
-<!--Create Data Frame-->
+<p>A long list of required packages may make your script looking unclean. Moreover, when additional packages are needed, the <code>library</code> or <code>required</code> function is repeated again.</p>
+<pre class="r"><code>library(package1)
+library(package2)
+library(package3)
+library(package4)
+library(package5)
+library(package6)</code></pre>
+<p>One can avoid messy script as above and use tidier looking script as below.</p>
+<pre class="r"><code>pkg=c(&quot;package1&quot;, &quot;package2&quot;, &quot;package3&quot;, &quot;package4&quot;, &quot;package5&quot;, &quot;package6&quot;)
+sapply(pkg, require, character=T)</code></pre>
 <h3>
 <li>
-Subsetting
+Automatically installing R packages if not installed
 </li>
 </h3>
-<ol type="a">
-<h4>
-<li>
-Column subset
-</li>
-</h4>
-<ol type="i">
-<li>
-The <code>$</code> operator
-</li>
-<p><em>df$colmn name</em></p>
-<li>
-By the column number
-</li>
-<p><em>df[,column number]</em></p>
-<li>
-By the column name
-</li>
-<p><em>df[, &quot;column name&quot;]</em></p>
-<li>
-<a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf"><code>dplyr</code> package</a>
-</li>
-<p>Utilize the function <code>select</code> from the <code>dplyr</code> package.<br> <em>select(df, column name)</em> <br> recommend using it in conjunction with the pipe operator <code>%&gt;%</code> and other functions such as <code>filter</code>, <code>summarize</code> or <code>mutate</code>.</p>
+<p>The code chunk below is a common way to install missing packages.</p>
+<pre class="r"><code>if (!require(missing_packages)) install.packages(missing_packages)</code></pre>
+<p>For example,</p>
+<pre class="r"><code>missing_packages&lt;-c(&quot;ggplot2&quot;, &quot;tidyr&quot;)
+if (!require(missing_packages)) install.packages(missing_packages)</code></pre>
+<p>Often times (especially sharing R scripts with co-workers who are novice R users), however, people forget to install R packages before running the script.</p>
+<p>In combination of the two listed items above (set hyperlink), The following code chunk is an elegant way to install and then load missing packages, if not previously installed.</p>
+<pre class="r"><code>pkg=c(&quot;pkg1&quot;,&quot;pkg2&quot;, &quot;pkg3&quot;, &quot;missing_pkg1&quot;, &quot;missing_pkg2&quot;)
+missing_packages&lt;- pkg[!(pkg %in% installed.packages()[,&quot;Package&quot;])]
+if (!require(missing_packages)) install.packages(missing_packages)
+sapply(pkg, require, character=T)</code></pre>
+<pre class="r"><code>pkg=c(&quot;ggplot2&quot;, &quot;&quot;)
+missing_packages&lt;- pkg[!(pkg %in% installed.packages()[,&quot;Package&quot;])]
+if (!require(missing_packages)) install.packages(missing_packages)
+sapply(pkg, require, character=T)</code></pre>
 </ol>
-<!--Column subset-->
-<p>e.g.</p>
-<pre class="r"><code>head(mtcars)</code></pre>
-<pre><code>                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
-Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
-<pre class="r"><code>mtcars$mpg
-mtcars[,1]
-mtcars[,&quot;mpg&quot;]
-mtcars %&gt;%
-  select(mpg)</code></pre>
-<pre><code>[1] 21.0 21.0 22.8 21.4 18.7 18.1</code></pre>
-<p><br></p>
-<p>Note</p>
-<ul>
-<li>Subset multiple columns</li>
-</ul>
-<pre class="r"><code>mtcars[,1:5]
-mtcars[,c(1,3,5)]
-mtcars[,c(&quot;mpg&quot;, &quot;disp&quot;, &quot;drat&quot;)]</code></pre>
-<ul>
-<li>Complement</li>
-</ul>
-<pre class="r"><code>mtcars[,-c(1,3,5)]</code></pre>
-<ul>
-<li>S4 objects Check <code>@</code> for S4. <br> To be updated…</li>
-</ul>
-<p><br></p>
-<h4>
+<!--Loading R packages-->
+<h2>
 <li>
-Row subset
+Source
 </li>
-</h4>
-<ol type="i">
-<li>
-By the row number
-</li>
-<p><em>df[row number,]</em></p>
-<li>
-By the row name
-</li>
-<p><em>df[&quot;row name&quot;“, ]</em></p>
-<p>e.g.</p>
-<pre class="r"><code>mtcars[1,]
-mtcars[&quot;Mazda RX4&quot;,]</code></pre>
-<pre><code>          mpg cyl disp  hp drat   wt  qsec vs am gear carb
-Mazda RX4  21   6  160 110  3.9 2.62 16.46  0  1    4    4</code></pre>
+</h2>
+<ol type="1">
 </ol>
-<!--Row subset-->
+<!---->
 </ol>
-<!--subsetting-->
-<h3>
-<li>
-Filtering
-</li>
-</h3>
-<ol type="a">
-<h4>
-<li>
-Using base R functions
-</li>
-</h4>
-<ol type="i">
-<li>
-<code>==</code> and <code>!=</code>
-</li>
-<p>df[df$“column name”==“value of interest”] df[df$“column name”!=“value of interest”]</p>
-<p>e.g. There are 3 different types of cylinders in the <code>mtcars</code> data set.</p>
-<pre><code>
- 4  6  8 
-11  7 14 </code></pre>
-<p>Use the logical operators <code>==</code> or <code>!=</code> to filter data with certain cylinder number.</p>
-<pre class="r"><code>mtcars[mtcars$cyl==6,]</code></pre>
-<pre><code>                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-Mazda RX4      21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
-Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
-Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
-Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
-Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
-Ferrari Dino   19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6</code></pre>
-<pre class="r"><code>mtcars[mtcars$cyl!=8,]</code></pre>
-<pre><code>                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-Mazda RX4      21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
-Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
-Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
-Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
-Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
-Merc 230       22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
-Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
-Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
-Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
-Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
-Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
-Toyota Corona  21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
-Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
-Porsche 914-2  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
-Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
-Ferrari Dino   19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
-Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
-<p>Logical operators such as <code>|</code> and <code>&amp;</code> may also be applied.</p>
-<pre class="r"><code>mtcars[(mtcars$cyl==6)|(mtcars$cyl==8),]</code></pre>
-<pre><code>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
-Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
-Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
-Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
-Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
-Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
-Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
-Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
-Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
-Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
-Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
-Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
-Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
-Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
-AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
-Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
-Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
-Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
-Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
-Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</code></pre>
-<pre class="r"><code>mtcars[(mtcars$cyl==6) &amp; (mtcars$hp==110),]</code></pre>
-<pre><code>                mpg cyl disp  hp drat    wt  qsec vs am gear carb
-Mazda RX4      21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-Mazda RX4 Wag  21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</code></pre>
-<li>
-<code>%in%</code> and its corresponding negation
-</li>
-<p><code>%in%</code> is an operator that matches first argument with its second and returns a logical vector. It is somewhat similar to the <code>==</code> operator, but more useful if there are multiple values that needs to be subsetted. For example, the code in the above example: &quot;mtcars[(mtcars$cyl==6)|(mtcars$cyl==8),]&quot; can be simplified as &quot;mtcars[mtcars$cyl %in% c(6, 8),]&quot;.</p>
-<pre class="r"><code>identical(mtcars[mtcars$cyl %in% c(6, 8),], mtcars[(mtcars$cyl==6)|(mtcars$cyl==8),])</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<p>Similarly, <code>%in%</code> may be negated as the following code.</p>
-<pre class="r"><code>mtcars[!mtcars$cyl %in% c(6, 8),]</code></pre>
-<pre><code>                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
-Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
-Merc 230       22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
-Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
-Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
-Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
-Toyota Corona  21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
-Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
-Porsche 914-2  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
-Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
-Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
-<p>Note that <code>mtcars[mtcars$cyl !%in% c(6, 8),]</code> would be a wrong code. I personally like to introduce a new function <code>%!in%</code>that negates the <code>%in%</code> function.</p>
-<pre class="r"><code>'%!in%' &lt;-function(x, y)!('%in%'(x,y))</code></pre>
-<pre class="r"><code>identical(mtcars[!mtcars$cyl %in% c(6, 8),],mtcars[mtcars$cyl %!in% c(6, 8),])</code></pre>
-<pre><code>[1] TRUE</code></pre>
-</ol>
-<!--Using base R functions-->
-<h4>
-<li>
-<a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf"><code>dplyr</code> package</a>
-</li>
-</h4>
-<p><code>filter</code> function from the <code>dplyr</code> pacakge can do the same job, except is can be well integrated with other functions using the pipe operator <code>%&gt;%</code>.</p>
-<pre class="r"><code>mtcars %&gt;%
-  filter(cyl&lt;6)</code></pre>
-<pre><code>    mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-1  22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
-2  24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
-3  22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
-4  32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
-5  30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
-6  33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
-7  21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
-8  27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
-9  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
-10 30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
-11 21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
-<p>The <code>filter</code> function may be applied with <code>|</code>, <code>%in%</code>, or <code>&amp;</code> operators as well.</p>
-<pre class="r"><code>mtcars %&gt;%
-  filter(cyl %in% c(6,8))</code></pre>
-<pre><code>    mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-1  21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-2  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
-3  21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
-4  18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
-5  18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
-6  14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
-7  19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
-8  17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
-9  16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
-10 17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
-11 15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
-12 10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
-13 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
-14 14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
-15 15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
-16 15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
-17 13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
-18 19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
-19 15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
-20 19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
-21 15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</code></pre>
-<pre class="r"><code>mtcars %&gt;%
-  filter(cyl ==6 | gear==4)</code></pre>
-<pre><code>    mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-1  21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-2  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
-3  22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
-4  21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
-5  18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
-6  24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
-7  22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
-8  19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
-9  17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
-10 32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
-11 30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
-12 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
-13 27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
-14 19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
-15 21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
-<pre class="r"><code>mtcars %&gt;%
-  filter(cyl==6 &amp; gear==4)</code></pre>
-<pre><code>   mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-1 21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-2 21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
-3 19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
-4 17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4</code></pre>
-</ol>
-<!--Filtering-->
-<h3>
-<li>
-Data Presentation
-</li>
-</h3>
-<ol type="a">
-<p>Data set structured in a human friendly format dose not necessarily imply computer/machine friendly fashion or vise versa. Often times, therefore, data structure should be changed from a human friendly wide form to a computer friendly long form or in the reversed manner. This may be even more important if one is sending and receiving data with co-workers who are not familiar with programming. <a href="https://cran.r-project.org/web/packages/tidyr/tidyr.pdf"><code>tidyr</code></a> and <a href="https://cran.rstudio.com/web/packages/reshape2/reshape2.pdf"><code>reshape</code></a> are two useful packages that converts between the two data format: long vs. wide.</p>
-<h4>
-<li>
-<code>tidyr</code>
-</li>
-</h4>
-<ol type="i">
-<li>
-Wide to long format using the <code>gather</code> function
-</li>
-</h4>
-<p>Consider the following sub data set from the <code>mtcars</code> data set.</p>
-<pre><code>         cars  mpg cyl  hp gear
-1   Mazda RX4 21.0   6 110    4
-2 Merc 450SLC 15.2   8 180    3</code></pre>
-<p>This is an example of a wide form data set where all variables are seperated in each column of the data frame. This may be a human friendly data format, however, may not be efficient for the computer to read in. Use the <code>gather</code> function from the <code>tidyr</code> package to convert the data from wide format to long format.</p>
-<p><code>gather</code> simply collapses multiple columns and its values from the original data frame into two columns: the ‘key’ and the ‘value’ column. The levels of the ‘key’ variable will be the name of the columns gathered, and the ‘value’ column will contain its corresponding values.</p>
-<p>Therefore, the function has 4 important arguments: data, key, value, and selected column. <br></p>
-<ul>
-<li>data: The original wide format data frame. <br></li>
-<li>key: Name of a column that will be newly created in the long format data set. The levels of the ‘key’ variable will be the column names of the ‘selected columns’ argument below. <br></li>
-<li>value: Name of a column that will be newly created in the long format data set. The values in the ‘value’ are the values from the ‘selected columns’ argument.</li>
-<li>selected columns: Specific columns to be gathered. These selected columns will be put into a single file formation. Column numbers may be used as well as its name.</li>
-</ul>
-<pre class="r"><code># Using column numbers
-subcars %&gt;%
-  gather(key=spec, value=performance, 2, 4)
-
-# Using column names
-subcars %&gt;%
-  gather(key=spec, value=performance, mpg, hp)</code></pre>
-<pre><code>         cars cyl gear spec performance
-1   Mazda RX4   6    4  mpg        21.0
-2 Merc 450SLC   8    3  mpg        15.2
-3   Mazda RX4   6    4   hp       110.0
-4 Merc 450SLC   8    3   hp       180.0</code></pre>
-<pre class="r"><code># Using column numbers with :
-subcars %&gt;%
-  gather(key=spec, value=values, 2:5)
-
-# Using column names with :
-subcars %&gt;%
-  gather(key=spec, value=values, mpg:gear)</code></pre>
-<pre><code>         cars spec values
-1   Mazda RX4  mpg   21.0
-2 Merc 450SLC  mpg   15.2
-3   Mazda RX4  cyl    6.0
-4 Merc 450SLC  cyl    8.0
-5   Mazda RX4   hp  110.0
-6 Merc 450SLC   hp  180.0
-7   Mazda RX4 gear    4.0
-8 Merc 450SLC gear    3.0</code></pre>
-<p>Sometimes, thinking in terms of complement or ‘everything else’ might be effecient when writing a script. Use the<code>-</code> to indicate what else to ‘gather’.</p>
-<pre class="r"><code>subcars %&gt;%
-  gather(key=spec, value=performance, -1, -3)
-
-subcars %&gt;%
-  gather(key=spec, value=performance, -cars, -cyl)</code></pre>
-<pre><code>         cars cyl spec performance
-1   Mazda RX4   6  mpg        21.0
-2 Merc 450SLC   8  mpg        15.2
-3   Mazda RX4   6   hp       110.0
-4 Merc 450SLC   8   hp       180.0
-5   Mazda RX4   6 gear         4.0
-6 Merc 450SLC   8 gear         3.0</code></pre>
-<li>
-Long to wide format using the <code>spread</code> function
-</li>
-</h4>
-<p>The <code>spread</code> function will do the opposite of the <code>gather</code> function. This is useful when one is trying to present a data set.</p>
-<pre><code>         cars cyl gear spec performance
-1   Mazda RX4   6    4  mpg        21.0
-2 Merc 450SLC   8    3  mpg        15.2
-3   Mazda RX4   6    4   hp       110.0
-4 Merc 450SLC   8    3   hp       180.0</code></pre>
-<pre class="r"><code>longform %&gt;%
-  spread(key=spec, value=performance)</code></pre>
-<pre><code>         cars cyl gear  hp  mpg
-1   Mazda RX4   6    4 110 21.0
-2 Merc 450SLC   8    3 180 15.2</code></pre>
-<p>An important argument that might be useful is the <code>fill</code> argument. This argument replaces missing values, either implicit or explicit.</p>
-<ul>
-<li>Implicit Missing</li>
-</ul>
-<pre class="r"><code># Example of implicit missing
-implicit_missing%&gt;%
-  spread(key=spec, value=performance, fill=NA)</code></pre>
-<pre><code>         cars cyl gear spec performance
-1   Mazda RX4   6    4  mpg          21
-3   Mazda RX4   6    4   hp         110
-4 Merc 450SLC   8    3   hp         180</code></pre>
-<pre><code>         cars cyl gear  hp mpg
-1   Mazda RX4   6    4 110  21
-2 Merc 450SLC   8    3 180  NA</code></pre>
-<ul>
-<li>Explicit Missing</li>
-</ul>
-<pre class="r"><code># Example of implicit missing
-explicit_missing%&gt;%
-  spread(key=spec, value=performance, fill=NA)</code></pre>
-<pre><code>         cars cyl gear spec performance
-1   Mazda RX4   6    4  mpg          21
-2 Merc 450SLC   8    3  mpg          NA
-3   Mazda RX4   6    4   hp         110
-4 Merc 450SLC   8    3   hp         180</code></pre>
-<pre><code>         cars cyl gear  hp mpg
-1   Mazda RX4   6    4 110  21
-2 Merc 450SLC   8    3 180  NA</code></pre>
-</ol>
-<!--tidyr-->
-<h4>
-<li>
-<code>reshape2</code>
-</li>
-</h4>
-<ol type="i">
-<p>The <code>reshape2</code> package could do similar operations introduced in the <code>tidyr</code> section above. I think <code>tidyr</code> package has a simpler syntax compared to the <code>reshape 2</code> package, however, <code>reshape 2</code> package can perform additional features that the <code>tidyr</code> package cannot.</p>
-<li>
-Wide to long format using the <code>melt</code> function
-</li>
-</h4>
-<p>The <code>melt</code> function can ‘gather’ the data set.</p>
-<pre class="r"><code>subcars %&gt;%
-  melt(
-    variable.name = &quot;spec&quot;,
-    value.names = &quot;performance&quot;,
-    id.vars = c(&quot;cars&quot;, &quot;cyl&quot;, &quot;gear&quot;))</code></pre>
-<pre><code>         cars cyl gear spec value
-1   Mazda RX4   6    4  mpg  21.0
-2 Merc 450SLC   8    3  mpg  15.2
-3   Mazda RX4   6    4   hp 110.0
-4 Merc 450SLC   8    3   hp 180.0</code></pre>
-<li>
-Long to wide format using the <code>dcast</code> function
-</li>
-</h4>
-<p><code>dcast</code> function is compatible to that of the ‘spread’ function.</p>
-<pre class="r"><code>longform %&gt;%
-  dcast(formula = cars+cyl+gear ~ spec, value.var = &quot;performance&quot;)</code></pre>
-<pre><code>         cars cyl gear  hp  mpg
-1   Mazda RX4   6    4 110 21.0
-2 Merc 450SLC   8    3 180 15.2</code></pre>
-<pre class="r"><code>longform %&gt;%
-  dcast(cars+cyl+gear ~ spec)</code></pre>
-<pre><code>Using performance as value column: use value.var to override.</code></pre>
-<pre><code>         cars cyl gear  hp  mpg
-1   Mazda RX4   6    4 110 21.0
-2 Merc 450SLC   8    3 180 15.2</code></pre>
-<pre class="r"><code>longform %&gt;%
-  dcast(cars+cyl+gear ~ ., mean)</code></pre>
-<pre><code>Using performance as value column: use value.var to override.</code></pre>
-<pre><code>         cars cyl gear    .
-1   Mazda RX4   6    4 65.5
-2 Merc 450SLC   8    3 97.6</code></pre>
-<p>One positive side of using the <code>reshape 2</code> package over the simpler <code>tidyr</code> package is that the <code>cast</code> function will aggregate all variables not defined in the function. It will not make much sence adding or taking means of “gear” and “mpg” for this particular example, but the example is given to check the syntax.</p>
-<pre><code>         cars cyl gear spec performance
-1   Mazda RX4   6    4  mpg        21.0
-2 Merc 450SLC   8    3  mpg        15.2
-3   Mazda RX4   6    4   hp       110.0
-4 Merc 450SLC   8    3   hp       180.0</code></pre>
-<pre class="r"><code># Sum of gear and mpg variable for each car+cylinder
-longform %&gt;% 
-  dcast(cars+cyl~., sum)</code></pre>
-<pre><code>Using performance as value column: use value.var to override.</code></pre>
-<pre><code>         cars cyl     .
-1   Mazda RX4   6 131.0
-2 Merc 450SLC   8 195.2</code></pre>
-<pre class="r"><code># Mean of gear and mpg variable for each car+cylinder combination
-longform %&gt;%
-  dcast(cars+cyl ~ ., mean)</code></pre>
-<pre><code>Using performance as value column: use value.var to override.</code></pre>
-<pre><code>         cars cyl    .
-1   Mazda RX4   6 65.5
-2 Merc 450SLC   8 97.6</code></pre>
-</ol>
-<!--reshape2-->
-</ol>
-<!--Data Presentation-->
-<h3>
-<li>
-Nested Data Frame
-</li>
-</h3>
-</ol>
-<!-- Data Frame-->
-</ol>
-<!--Organizing Data-->
+<!--Miscellaneous-->
 
 
 
