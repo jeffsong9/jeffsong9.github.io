@@ -24,8 +24,17 @@ dd {
   margin-left: 410px; 
 }
 
-#container{
-    width: 600px;
-    margin: 15px auto; 
-    position: relative; 
+#container2{
+  margin-right: 15px auto;
+  margin-left:auto;
+  padding-left:15px;
+  padding-right:15px
+}
+
+.container2 {
+  display: flex;
+}
+
+.container2.space-around {
+  justify-content: space-around;
 }
