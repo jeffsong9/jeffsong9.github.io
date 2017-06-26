@@ -1,0 +1,59 @@
+---
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    theme: cosmo
+---
+<style>
+body {
+    position: absolute;
+    left: 0px;}
+</style>
+
+<!--html_preserve-->
+<div class="container">
+<!-- Static navbar -->
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="../index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+        
+          <li class="">
+					<a href="/get_to_know_tek.html">Get To Know Tek</a>
+	</li>              
+				  
+				  
+	<li class="">
+					<a href="/past_project.html">Past Project</a>
+	</li>
+
+	<li class="">
+					<a href="/cheat_sheet.html">Cheat Sheet</a>
+	</li>
+
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container-fluid -->
+</nav><!--navbar navbar-default-->
+</div>
+<!--/html_preserve-->
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+pkg=c("shiny")
+sapply(pkg, require, character=T)
+```

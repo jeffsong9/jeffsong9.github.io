@@ -23,3 +23,9 @@ dd {
   position: fixed; 
   margin-left: 410px; 
 }
+
+#container{
+    width: 600px;
+    margin: 15px auto; 
+    position: relative; 
+}

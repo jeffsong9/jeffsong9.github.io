@@ -1,0 +1,139 @@
+---
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    theme: cosmo
+---
+<style>
+body {
+    position: absolute;
+    left: 0px;}
+</style>
+
+<!--html_preserve-->
+<div class="container">
+<!-- Static navbar -->
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="../index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+        
+          <li class="">
+					<a href="/get_to_know_tek.html">Get To Know Tek</a>
+	</li>              
+				  
+				  
+	<li class="">
+					<a href="/past_project.html">Past Project</a>
+	</li>
+
+	<li class="">
+					<a href="/cheat_sheet.html">Cheat Sheet</a>
+	</li>
+
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container-fluid -->
+</nav><!--navbar navbar-default-->
+</div>
+<!--/html_preserve-->
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+pkg=c("tm")
+sapply(pkg, require, character=T)
+```
+
+<h1>Miscellaneous</h1><ol type="I">
+
+  <h2><li>Updating R</li></h2><ol type="1">
+  </ol><!--Updating R-->
+
+
+  <h2><li>Loading R packages</li></h2><ol type="1">
+There are multiple ways to load an R package. The most general way is to load the package using the `library` function or the `require` function on the script.
+
+```{r, eval=F, comment=""}
+library(some_package)
+require(some_pacakge)
+```
+
+If one is using a GUI(Graphic User Interphase) such as the `RStudio`, then a simple click on the check box next to the installed package tab will load the desired library. 
+However, what if one needs to load multiple packages at once? What if some of these packages are uninstalled? 
+  
+<h3><li>Loading Multiple R packages</li></h3>
+A long list of required packages may make your script looking unclean. Moreover, when additional packages are needed, the `library` or `required` function is repeated again.
+    
+```{r, eval=F, comment=""}
+library(package1)
+library(package2)
+library(package3)
+library(package4)
+library(package5)
+library(package6)
+```    
+  
+One can avoid messy script as above and use tidier looking script as below.
+  
+```{r, eval=F, comment=""}
+pkg=c("package1", "package2", "package3", "package4", "package5", "package6")
+sapply(pkg, require, character=T)
+```
+
+<h3><li>Automatically installing R packages if not installed</li></h3>
+The code chunk below is a common way to install missing packages.
+```{r, eval=F, comment=""}
+if (!require(missing_packages)) install.packages(missing_packages)
+```
+
+For example, 
+```{r, eval=F, comment=""}
+missing_packages<-c("ggplot2", "tidyr")
+if (!require(missing_packages)) install.packages(missing_packages)
+```
+
+
+Often times (especially sharing R scripts with co-workers who are novice R users), however, people forget to install R packages before running the script. 
+
+In combination of the two listed items above (set hyperlink), The following code chunk is an elegant way to install and then load missing packages, if not previously installed.
+
+```{r, eval=F, comment=""}
+pkg=c("pkg1","pkg2", "pkg3", "missing_pkg1", "missing_pkg2")
+missing_packages<- pkg[!(pkg %in% installed.packages()[,"Package"])]
+if (!require(missing_packages)) install.packages(missing_packages)
+sapply(pkg, require, character=T)
+```
+
+```{r, eval=F, comment=""}
+pkg=c("ggplot2", "")
+missing_packages<- pkg[!(pkg %in% installed.packages()[,"Package"])]
+if (!require(missing_packages)) install.packages(missing_packages)
+sapply(pkg, require, character=T)
+```
+
+  
+  
+  </ol><!--Loading R packages-->
+
+
+  <h2><li>Source</li></h2><ol type="1">
+  </ol><!---->
+
+
+
+
+</ol><!--Miscellaneous-->
