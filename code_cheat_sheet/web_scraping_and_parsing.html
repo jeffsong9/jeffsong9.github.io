@@ -242,7 +242,10 @@ body {
         
           <li class="">
 					<a href="/get_to_know_tek.html">Get To Know Tek</a>
-	</li>              
+	</li>
+	              <li class="">
+      					<a href="/KATUSA.html">Second to None</a>
+			      	</li>   
 				  
 				  
 	<li class="">
@@ -283,7 +286,7 @@ require(rvest) #load the `rvest` package</code></pre>
 <pre><code>{xml_document}
 &lt;html lang=&quot;en&quot;&gt;
 [1] &lt;head&gt;\n&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset= ...
-[2] &lt;body&gt;\n\n    &lt;div class=&quot;container&quot;&gt;\n\n      &lt;!-- Static navbar -- ...</code></pre>
+[2] &lt;body&gt;\n\n    &lt;div class=&quot;container&quot;&gt;\n      &lt;!-- Static navbar --&gt;\ ...</code></pre>
 <h3>
 <li>
 <code>html_nodes</code>
@@ -309,11 +312,11 @@ Single Node Set
   html_nodes(xpath=&quot;//div&quot;) %&gt;%
   head(5)</code></pre>
 <pre><code>{xml_nodeset (5)}
-[1] &lt;div class=&quot;container&quot;&gt;\n\n      &lt;!-- Static navbar --&gt;\n      &lt;nav  ...
+[1] &lt;div class=&quot;container&quot;&gt;\n      &lt;!-- Static navbar --&gt;\n      &lt;nav cl ...
 [2] &lt;div class=&quot;container-fluid&quot;&gt;\n          &lt;div class=&quot;navbar-header&quot;&gt; ...
 [3] &lt;div class=&quot;navbar-header&quot;&gt;\n            &lt;button type=&quot;button&quot; class ...
 [4] &lt;div id=&quot;navbar&quot; class=&quot;navbar-collapse collapse&quot;&gt;\n            &lt;ul  ...
-[5] &lt;div id=&quot;page-wrap&quot;&gt;\n  &lt;div id=&quot;wrap-inner&quot;&gt;\n    &lt;div id=&quot;content&quot; ...</code></pre>
+[5] &lt;div id=&quot;page-wrap&quot;&gt;\n        &lt;div id=&quot;wrap-inner&quot;&gt;\n          &lt;div  ...</code></pre>
 <p>cf) <code>html_node</code></p>
 <h4>
 <li>
@@ -328,11 +331,11 @@ lapply(paths, function(x) read_html(&quot;https://jeffsong9.github.io/&quot;) %&
   html_nodes(xpath=x))</code></pre>
 <pre><code>$profile
 {xml_nodeset (1)}
-[1] &lt;div class=&quot;profile-info-mod profile-essentials&quot;&gt;\n            &lt;h2 c ...
+[1] &lt;div class=&quot;profile-info-mod profile-essentials&quot;&gt;\n                  ...
 
 $side_bar
 {xml_nodeset (1)}
-[1] &lt;div class=&quot;floating-sidebar-float&quot;&gt;\n            &lt;div class=&quot;profil ...</code></pre>
+[1] &lt;div class=&quot;floating-sidebar-float&quot;&gt;\n                  &lt;div class=&quot; ...</code></pre>
 </ol>
 <!--html_nodes-->
 <h3>
