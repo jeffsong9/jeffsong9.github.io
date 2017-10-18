@@ -1,0 +1,170 @@
+/* SAS script modified frin Dr. Peters' example SAS code */
+
+/*INITIALIZE DATA*/
+
+libname fa_exp '\\my.files.iastate.edu\Users\songt\Desktop\SOC512\HW5';
+data ifp_miss; set fa_exp.farm_miss;
+run;
+
+proc contents data=ifp_miss;
+  run;
+
+/*Impute Missing cells */
+proc means data=ifp_miss;
+ var x1--x31 age farmsales;
+ run;
+
+proc mi data=ifp_miss nimpute=1 seed=37851 out=ifp_mi
+	min = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 18 1
+	max = 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 95 8
+	round =1 ;
+	mcmc niter=200 chain=single impute=full;
+	var x1--x31 age farmsales;
+run;
+
+proc means data=ifp_mi;
+ var x1--x31 age farmsales;
+ run;
+
+/*SCREEN DATA*/
+
+/****univariate outliers****/
+proc univariate data=ifp_mi normal plots;
+  var x1--x31;
+  run;
+
+/****multivariate outliers****/
+%inc "\\my.files.iastate.edu\Users\songt\Desktop\SOC512\HW5\macro_multnorm.sas";
+%multnorm(data=ifp_mi, 
+          var = x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 x29 x30 x31, 
+          plot=mult, hires=no);
+
+/****factorable data (OPTIONAL - duplicated in proc princomp and proc factor)****/
+proc corr data=ifp_mi;
+  var x1--x31;
+  run;
+
+
+/*FACTOR ANALYSIS*/
+
+/****PCA Oblique****/
+ods graphics on;
+proc factor data=ifp_mi method=principal priors=one norm=kaiser rotate=covarimin /*nfactors=6 
+			out=pcaobl*/ outstat=pcaobl_stat all plots=(scree loadings);
+  var x1--x31;
+run;
+ods graphics off;
+
+
+/*PARLLEL ANALYSIS*/
+/****Assumes uniform distribution. Random numbers from computers not truly random.****/
+/****Used in parallel analysis.****/
+
+data randata;
+  do i = 1 to 1322;                   /*set number of cases*/
+  min=1; max=5+1;                       /*set min and max values*/
+  r1 = min+floor((max-min)*rand('uniform')); 
+  r2 = min+floor((max-min)*rand('uniform'));
+  r3 = min+floor((max-min)*rand('uniform'));
+  r4 = min+floor((max-min)*rand('uniform'));
+  r5 = min+floor((max-min)*rand('uniform'));
+  r6 = min+floor((max-min)*rand('uniform'));
+  r7 = min+floor((max-min)*rand('uniform'));
+  r8 = min+floor((max-min)*rand('uniform'));
+  r9 = min+floor((max-min)*rand('uniform'));
+  r10 = min+floor((max-min)*rand('uniform'));
+  r11 = min+floor((max-min)*rand('uniform'));
+  r12 = min+floor((max-min)*rand('uniform'));
+  r13 = min+floor((max-min)*rand('uniform'));
+  r14 = min+floor((max-min)*rand('uniform'));
+  r15 = min+floor((max-min)*rand('uniform'));
+  r16 = min+floor((max-min)*rand('uniform'));
+  r17 = min+floor((max-min)*rand('uniform'));
+  r18 = min+floor((max-min)*rand('uniform'));
+  r19 = min+floor((max-min)*rand('uniform'));
+  r20 = min+floor((max-min)*rand('uniform'));
+  r21 = min+floor((max-min)*rand('uniform'));
+  r22 = min+floor((max-min)*rand('uniform'));
+  r23 = min+floor((max-min)*rand('uniform'));
+  r24 = min+floor((max-min)*rand('uniform'));
+  r25 = min+floor((max-min)*rand('uniform'));
+  r26 = min+floor((max-min)*rand('uniform'));
+  r27 = min+floor((max-min)*rand('uniform'));
+  r28 = min+floor((max-min)*rand('uniform'));
+  r29 = min+floor((max-min)*rand('uniform'));
+  r30 = min+floor((max-min)*rand('uniform'));
+  r31 = min+floor((max-min)*rand('uniform'));
+  output;
+end;
+run;
+
+/****verify min, max, mean****/
+proc means data=randata;
+  var r1 -- r31;
+  run;
+
+/****factor random data using same extraction and rotation as EFA****/
+proc factor data=randata method=principal priors=one /*norm=kaiser rotate=covarimin nfactors=6 
+			out=pcaobl*/ outstat=rand_stat all plot scree;
+  var r1 -- r31;
+run;
+
+/****extract eigen-values and rename variables****/
+data rand_stat2; set rand_stat;
+  where _type_='EIGENVAL';
+run;
+proc transpose data=rand_stat2 out=rand_stat2_t;
+  id _type_;
+  var r1 -- r31;
+run;
+data rand_stat2_t; set rand_stat2_t; 
+  rename _name_=name_rand eigenval=eigen_rand;
+  factor = _n_;
+run;
+
+/****extract eigen-values and rename variables****/
+data Pcaobl_stat2; set Pcaobl_stat;
+  where _type_='EIGENVAL';
+run;
+proc transpose data=Pcaobl_stat2 out=Pcaobl_stat2_t;
+  id _type_;
+  var x1 -- x31;
+run;
+data Pcaobl_stat2_t; set Pcaobl_stat2_t; 
+  rename _name_=name_efa eigenval=eigen_efa;
+  factor = _n_;
+run;
+
+/****merge eigen-values from random and substantive EFAs****/
+data paraplots;
+  merge rand_stat2_t Pcaobl_stat2_t;
+  by factor;
+run;
+
+/****plot eigen-values****/
+symbol1 interpol=join height=1.5 value=dot color=red;
+symbol2 interpol=join height=1.5 value=squarefilled color=blue;
+proc gplot data=paraplots;
+  plot (eigen_rand eigen_efa)*factor / overlay legend;
+run;
+quit;
+symbol1; symbol2; 
+
+
+/* decided to run orthogonal rotation */
+ods graphics on;
+proc factor data=ifp_mi method=principal priors=one norm=kaiser rotate=varimax nfactors=5 
+			out=pcaorth outstat=pcaorth_stat all plots=(scree loadings);
+  var x1--x31;
+run;
+ods graphics off;
+
+
+/* Factor Score */
+proc contents data=pcaorth;
+run;
+
+proc corr data=pcaorth;
+	var factor1 factor2 factor3 factor4 factor5 age farmsales;
+	run;
+/*END*/
