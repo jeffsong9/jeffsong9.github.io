@@ -1,0 +1,142 @@
+/*** Script Modified from Dr. Peters' lab codes ****/
+
+
+
+/*INITIALIZE DATA*/
+
+data hw; set '\\my.files.iastate.edu\Users\songt\Desktop\SOC512\HW6\ineq12.sas7bdat';
+run;
+
+
+
+/*EX ANTE ASSUMPTIONS*/
+
+/*Normality and outliers.*/
+proc univariate data=hw normal plots; 
+  var POPDEN MINORITY AGE65 NOHSD MIGRATE COLLEGE LFP MGRPROF SALESADM PERSERV WORKCL AGRNAT;
+  qqplot;
+run;
+
+/*No multicollinearity.*/
+proc corr data=hw; 
+  var POPDEN MINORITY AGE65 NOHSD MIGRATE COLLEGE LFP MGRPROF SALESADM PERSERV WORKCL AGRNAT;
+run;
+
+/*Adequate cell sizes.  Rule of 5. unbalanced-good fitting but maybe predicting dominating variable not the other. sparcity problem*/
+/*case matching technique. peer match balanced. do not use the variables in the regression when doing this(30 min lecture 2).*/
+proc freq data=hw; 
+  tables ginicat giniord;
+run;
+
+
+
+/*MULTINOMIAL MODEL*/
+
+/*Plots - not available for multinomial.*/
+/*Model - aggregate = fit statistics.*/
+/*Logistic Model = link=glogit.  Probit Models = cannot estimate.*/
+/*Output - out = data for residuals. xbeta = function of x.*/
+
+/*Deviance and Pearson Goodness-of-Fit Statistics: Fits well*/
+/*overdispersion no problem with since value/DF <1 */
+/*R2 .2 or .3 and above acceptable*/
+/*Only 35 cases. maybe Sparseness(lecture logit4) (96.4536/138.8928-1) .5 problematic  => Hosmer and Lemeshow (Only works for binary. but prefered)*/
+/*which one driving the correct model?*/
+/*Interpretation!!!!! lecture "logit4-odds ratios" Also see pg 43. Odds Ratio Estimates and Wald Confidence Intervals (lecture 2 55:30 min)*/
+/*...one unit change, the minority change "logit"*/
+
+data hw; set hw; 
+ POPDEN100=POPDEN/100;
+run;
+
+ods graphics on;
+proc logistic data=hw /*plots(only)=influence*/;
+  class GINICAT (param=ref ref='3'); /*Average group as the reference.*/
+  model GINICAT = POPDEN100 MINORITY AGE65 NOHSD MIGRATE COLLEGE LFP MGRPROF SALESADM PERSERV WORKCL AGRNAT
+    / link=glogit /*probit*/ aggregate scale=none rsquare expb stb /*lackfit*/ clodds=wald; /*outroc=rocl ctable pprob=0.5; pprob: predicted probability. zero probability?*/
+  output out=resid_multinom predprobs=individual /*reschi=reschi resdev=resdev*/ xbeta=xb;
+run;
+ods graphics off;
+
+/*CLASSIFICATION ACCURACY*/
+
+/****ctable - Classification Table****/
+data ctable1; set resid_multinom;
+  where _level_=1;
+run;
+data ctable2; set resid_multinom;
+  where _level_=2;
+run;
+proc freq data=ctable1;
+  tables _from_*_into_ / cumcol nocol all;
+run;
+
+
+/****Classification Plots****/
+symbol1 value=dot height=0.5;
+proc gplot data=resid_multinom;
+  plot ip_1*_into_ / legend;
+  plot ip_2*_into_ / legend;
+  plot ip_3*_into_ / legend;
+run; quit;
+symbol1;
+
+/****Sigmoid Distributions****/
+symbol1 value=dot height=0.5;
+proc gplot data=ctable1;
+ by _level_;
+ plot ip_1*xb;
+ run; quit;
+ symbol1;
+ proc gplot data=ctable2;
+ by _level_;
+ plot ip_2*xb;
+ run; quit;
+ symbol1;
+
+/****Classification table - custom Pr.****/
+/*data resid_multinorm_pr; set resid_multinom;
+  if (ip_1 > 0.75)        then into_75=1;
+  if (ip_2 > 0.75)        then into_75=2;
+  if (ip_3 > 0.75)        then into_75=3;
+  if ((ip_1 < 0.75) and (ip_2 < 0.75) and (ip_3 < 0.75)) then into_75=0;
+run;*/
+/****Once done, re-run classification table and plots above using this dataset****/
+
+
+
+/*REGRESSION PLOTS OF PR(Y0 BY XB*/
+
+/*RESIDUALS*/
+/*In multinomial, proc logistic does not produce plots.  Need to create manually.*/
+
+/*Calculate residuals for plots*/
+proc sort data=resid_multinom;
+  by _from_;
+run;
+data plots; set resid_multinom;
+  id = _N_;  /*creates serial case ID for plots*/
+  if (GINICAT = 1) then cat1=1;  /*recode nominal variable to separate binary variables, drop reference category*/
+    else if (GINICAT = 2 or 3) then cat1=0;
+  if (GINICAT = 2) then cat3=1;
+    else if (GINICAT = 1 or 2) then cat2=0;  /*ref is category 2*/
+  resid1 = (cat1 - ip_1);  /*calculates raw residuals*/
+  resid2 = (cat2 - ip_2);
+  s_resid1 = (resid1 / (sqrt(ip_1*(1-ip_1))));  /*calculates z-score/standard residuals*/
+  s_resid2 = (resid2 / (sqrt(ip_2*(1-ip_2))));
+run;
+
+/*generate residual plots*/
+symbol1 value=dot height=0.5;
+proc gplot data=plots;
+  plot ip_1*_from_ / legend;
+  plot ip_2*_from_ / legend;
+  plot s_resid1*id / legend;
+  plot s_resid2*id / legend;
+  plot s_resid1*_from_ / legend;
+  plot s_resid2*_from_ / legend;
+run; quit;
+symbol1;
+
+
+/*END*/
