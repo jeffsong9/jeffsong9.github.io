@@ -1,0 +1,253 @@
+/*** Modification of Dr. Peters' Lecture Codes ***/
+
+/*INITIALIZE DATA*/
+
+data data_co; set '\\my.files.iastate.edu\Users\songt\Desktop\SOC512\Last HW\pov_co.sas7bdat';
+popden2=(popden/100);
+run;
+
+data data_st; set '\\my.files.iastate.edu\Users\songt\Desktop\SOC512\Last HW\pov_st.sas7bdat';
+gsp2=(gsp/1000);
+run;
+
+/* CWC */
+/***Level 1 Center Within Context and Grand Mean Center State Means***/
+
+     /**********compute group means**********/
+proc sort data=data_co;
+  by state;
+run;
+proc means data=data_co mean;
+  var popden2 minority age65 shfc nohsd migcou college lfp affm mfgcons servlow servhigh hltedu;
+  by state;
+  output out=cwcmeans_L1
+    mean(popden2 minority age65 shfc nohsd migcou college lfp affm mfgcons servlow servhigh hltedu) = 
+         m_popden2 m_minority m_age65 m_shfc m_nohsd m_migcou m_college m_lfp m_affm m_mfgcons m_servlow m_servhigh m_hltedu;
+run;
+proc means data=cwcmeans_L1 mean;
+  var m_popden2 m_minority m_age65 m_shfc m_nohsd m_migcou m_college m_lfp m_affm m_mfgcons m_servlow m_servhigh m_hltedu;
+  output out=gmcmeans_L1
+    mean(m_popden2 m_minority m_age65 m_shfc m_nohsd m_migcou m_college m_lfp m_affm m_mfgcons m_servlow m_servhigh m_hltedu) = 
+         gm_popden2 gm_minority gm_age65 gm_shfc gm_nohsd gm_migcou gm_college gm_lfp gm_affm gm_mfgcons gm_servlow gm_servhigh gm_hltedu;
+run;
+
+     /**********merge group means**********/
+proc sort data=data_co;
+  by state;
+run;
+proc sort data=cwcmeans_L1;
+  by state;
+run;
+data data_co_cwc;
+  merge data_co cwcmeans_L1;
+  by state;
+run;
+data data_co_cwc;
+  merge data_co_cwc gmcmeans_L1;
+  by _type_;
+run;
+
+     /**********CWC**********/
+data data_co_cwc; set data_co_cwc;
+     /**********CWC Level-1**********/
+  cwc_popden2  = popden2  - m_popden2;
+  cwc_minority = minority - m_minority;
+  cwc_age65    = age65    - m_age65;
+  cwc_shfc     = shfc     - m_shfc;
+  cwc_nohsd    = nohsd    - m_nohsd;
+  cwc_migcou   = migcou   - m_migcou;
+  cwc_college  = college  - m_college;
+  cwc_lfp      = lfp      - m_lfp;
+  cwc_affm     = affm     - m_affm;
+  cwc_mfgcons  = mfgcons  - m_mfgcons;
+  cwc_servlow  = servlow  - m_servlow;
+  cwc_servhigh = servhigh - m_servhigh;
+  cwc_hltedu   = hltedu   - m_hltedu;
+       /**********GMC Level-1 State Means**********/
+  gmc_popden2  = m_popden2  - gm_popden2;
+  gmc_minority = m_minority - gm_minority;
+  gmc_age65    = m_age65    - gm_age65;
+  gmc_shfc     = m_shfc     - gm_shfc;
+  gmc_nohsd    = m_nohsd    - gm_nohsd;
+  gmc_migcou   = m_migcou   - gm_migcou;
+  gmc_college  = m_college  - gm_college;
+  gmc_lfp      = m_lfp      - gm_lfp;
+  gmc_affm     = m_affm     - gm_affm;
+  gmc_mfgcons  = m_mfgcons  - gm_mfgcons;
+  gmc_servlow  = m_servlow  - gm_servlow;
+  gmc_servhigh = m_servhigh - gm_servhigh;
+  gmc_hltedu   = m_hltedu   - gm_hltedu;
+run;
+
+/***Level 2 Center Within Context.***/
+
+     /**********compute group means**********/
+proc means data=data_st mean;
+  var pubasst polcult gsp2;
+  output out=gmcmeans_L2
+    mean(pubasst polcult gsp2) = 
+         gm_pubasst gm_polcult gm_gsp2;
+run;
+     /**********merge group means and GMC**********/
+data mlmexp_cwc;
+  merge mlmexp_cwc gmcmeans_L2;
+  by _type_;
+  gmc_pubasst = pubasst - gm_pubasst;
+  gmc_polcult = polcult - gm_polcult;
+  gmc_gsp2 = gsp2 - gm_gsp2;
+run;
+
+/***Merge Level 1 and Level 2 Data.***/
+proc sort data=data_co_cwc;
+  by state;
+run;
+proc sort data=data_st;
+  by state;
+run;
+data mlmexp_cwc;
+  merge data_co_cwc data_st;
+  by state;
+run;
+
+/* Ex ANTE ASSUMPTIONS */
+
+/*** 1st check group differences by calculating the ICC ***/
+proc mixed data=data_co method=reml maxiter=100 info ic covtest plots=none;
+class state;
+model pov = /solution ddfm=satterth residual outpred=enull;
+random intercept /solution subject=state type=un;
+run;
+
+/*** to calculate the harmonic mean ***/
+proc freq data=data_co;
+table state;
+run;
+data hmean; set data_co;
+harmean=harmean(67, 15, 75, 58, 63, 8, 3, 67, 159, 44, 102, 92, 99, 105, 120, 64, 16, 24, 14, 83, 87, 82, 115, 56, 93, 17, 10, 21, 33, 62, 100, 53, 88, 77, 36, 67, 5, 46, 66, 95, 254, 29, 14, 105, 39, 55, 72, 23);
+run;
+proc print data=hmean(obs=1);
+var harmean;
+run;
+
+
+/*** homogeneity of regression assumption ***/
+/***** regressions by group *****/
+proc reg data=data_co simple outest=ols_grpdiff plots=none;
+	by state;
+	model pov=popden2 minority age65 shfc nohsd migcou college lfp affm mfgcons servlow servhigh hltedu / stb;
+run; quit;
+/***** overall regression *****/
+proc reg data=data_co simple;
+	model pov=popden2 minority age65 shfc nohsd migcou college lfp affm mfgcons servlow servhigh hltedu / stb;
+run; quit;
+/***** center group parameters by subtracting overall parameters *****/
+data ols_grpdiff; set ols_grpdiff;
+b_intercept = intercept - 18.26838;
+b_popden2=popden2- 0.00724;
+b_minority=minority-0.00843;
+b_age65= agg65+0.07825;
+b_shfc=shfc-0.19569;
+b_nohsd=nohsd-0.25590;
+b_migcou=migcou+0.04344;
+b_college= college-0.44391;
+b_lfp=lfp+0.40900;
+b_affm=affm-0.15506;
+b_mfgcons=mfgcons-0.02299;
+b_servlow=servlow-0.13446;
+b_servhigh=servhigh+0.15718;
+b_hltedu=hltedu-0.11982;
+run;
+/***** plot parameters by state and variable ******/
+symbol1 i=join height=0.5;
+proc gplot data=ols_grpdiff;
+plot b_intercept*state / autovref;
+plot b_popden2*state / autovref;
+plot b_minority*state / autovref;
+plot b_age65*state / autovref;
+plot b_shfc*state / autovref;
+plot b_nohsd*state / autovref;
+plot b_migcou*state / autovref;
+plot b_college*state / autovref;
+plot b_lfp*state / autovref;
+plot b_affm*state / autovref;
+plot b_mfgcons*state / autovref;
+plot b_servlow*state / autovref;
+plot b_servhigh*state / autovref;
+plot b_hltedu*state / autovref;
+run; quit; symbol1;
+
+
+
+
+/*** Outlier check ***/
+proc univariate data=mlmexp_cwc normal plots;
+var pov cwc_popden2 cwc_minority cwc_age65 cwc_shfc cwc_nohsd cwc_migcou cwc_college cwc_lfp cwc_affm cwc_mfgcons cwc_servlow cwc_servhigh cwc_hltedu;
+qqplot;
+run;
+
+/*** no Multicolinearity check ***/
+proc corr data=mlmexp_cwc;
+var cwc_popden2 cwc_minority cwc_age65 cwc_shfc cwc_nohsd cwc_migcou cwc_college cwc_lfp cwc_affm cwc_mfgcons cwc_servlow cwc_servhigh cwc_hltedu;
+run;
+
+/***Linearity Y*X within group.***/
+/*symbol1 interpol=rQclm95 value=dot height=0.5; /**********rQclm95 fits quadratic line at 95% CI**********/
+/*proc gplot data=mlmexp_cwc;
+  by state;
+  plot pov*popden2;
+  plot pov*minority;
+  plot pov*shfc;
+  plot pov*nohsd;
+  plot pov*college;
+  plot pov*lfp;
+run; quit; symbol1;*/
+
+/*** NULL MODEL ***/
+ods graphics on;
+proc mixed data=mlmexp_cwc method=reml maxiter=100 info ic covtest plots=none;
+class state;
+model pov= /solution ddfm=satterth residual;
+random intercept /solution subject=state type=un;
+run;
+ods graphics off;
+
+/*** Random Intercept Model ***/
+ods graphics on;
+proc mixed data=mlmexp_cwc method=reml maxiter=100 info ic covtest plots=all;
+class state;
+model pov= cwc_popden2 cwc_minority cwc_age65 cwc_shfc cwc_nohsd cwc_migcou cwc_college cwc_lfp cwc_affm cwc_mfgcons cwc_servlow cwc_servhigh cwc_hltedu
+gmc_shfc gmc_nohsd gmc_lfp gmc_affm gmc_mfgcons gmc_servlow gmc_servhigh gmc_hltedu gmc_pubasst gmc_polcult gmc_gsp2
+/solution ddfm=satterth residual outpred=erim;
+random intercept /solution subject=state type=un;
+run;
+ods graphics off;
+
+/*** Random Intercept and Slope Model ***/
+ods graphics on;
+proc mixed data=mlmexp_cwc method=reml maxiter=100 info ic covtest plots=NONE;
+class state;
+model pov= cwc_popden2 cwc_minority cwc_age65 cwc_shfc cwc_nohsd cwc_migcou cwc_college cwc_lfp cwc_affm cwc_mfgcons cwc_servlow cwc_servhigh cwc_hltedu
+gmc_shfc gmc_nohsd gmc_lfp gmc_affm gmc_mfgcons gmc_servlow gmc_servhigh gmc_hltedu gmc_pubasst gmc_polcult gmc_gsp2
+cwc_NOHSD*gmc_nohsd cwc_NOHSD*gmc_polcult cwc_NOHSD*gmc_minority cwc_NOHSD*gmc_age65
+/solution ddfm=satterth residual outpred=erim;
+random intercept cwc_NOHSD /solution subject=state type=un;
+run;
+ods graphics off;
+
+
+/***** level 2 residuals ******/
+proc import out=uresid_rism datafile="\\my.files.iastate.edu\Users\songt\Desktop\SOC512\Last HW\uresid_rism.xlsx"
+dbms=xlsx replace;
+sheet="sheet1";
+genames=YES;
+run;
+
+/***** merge level 1 and level 2 residuals and standardize *****/
+proc sort data=uresid_rism;
+by state;
+run;
+proc sort data=erism;
+run;
+data resid_erism;
+merge uresid_rism erism;
+run;
